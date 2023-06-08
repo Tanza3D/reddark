@@ -283,4 +283,5 @@ light {
     margin-bottom: 9px;
     background-color: var(--background-body);
     border-bottom: 1px solid #fff2;
+    z-index: 42;
 }
