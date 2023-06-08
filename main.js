@@ -69,8 +69,8 @@ async function createList() {
 firstCheck = false;
 
 io.on('connection', (socket) => {
-    if(firstCheck == false) {
-        socket.emit("subreddits", {"Loading...": []});
+    if (firstCheck == false) {
+        socket.emit("loading");
     } else {
         socket.emit("subreddits", subreddits);
     }
@@ -108,12 +108,13 @@ async function updateStatus() {
                     io.emit("updatenew", subreddits[section][subreddit]);
                 }
                 done++;
-                if (done > (todo - 10) && finished == false) {
-                    finished = true
-                    console.log("JUST ABOUT DONE!!!");
-                    updateStatus();
-                    firstCheck = true;
+                if (done > (todo - 2) && firstCheck == false) {
                     io.emit("subreddits", subreddits);
+                    firstCheck = true;
+                }
+                if (done > (todo - 2)) {
+                    updateStatus();
+                    console.log("FINISHED CHECK (or close enough to)");
                 }
             });
         }

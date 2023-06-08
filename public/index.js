@@ -35,6 +35,10 @@ socket.on("update", (data) => {
     console.log(data);
     updateSubreddit(data);
 })
+socket.on("loading", () => {
+    document.getElementById("list").innerHTML = "Server reloading...";
+})
+
 
 socket.on('disconnect', function () {
     loaded = false;
