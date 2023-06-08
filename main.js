@@ -68,7 +68,11 @@ async function createList() {
 firstCheck = false;
 
 io.on('connection', (socket) => {
-    socket.emit("subreddits", subreddits);
+    if(firstCheck == false) {
+        socket.emit("subreddits", {"Loading...": []});
+    } else {
+        socket.emit("subreddits", subreddits);
+    }
     console.log('a user connected - currently connected users: ' + io.engine.clientsCount);
 });
 
@@ -108,6 +112,7 @@ async function updateStatus() {
                     console.log("JUST ABOUT DONE!!!");
                     updateStatus();
                     firstCheck = true;
+                    io.emit("subreddits", subreddits);
                 }
             });
         }
