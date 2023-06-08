@@ -149,7 +149,49 @@ grid-gap: 10px;
 .subreddit h3 {
     margin: 0px;
 }
+.subreddit p {
+    margin: 0px;
+}
 .subreddit-private {
     color: #00ffaa;
+    text-shadow: 0px 0px 20px #00ffaa;
+    margin-bottom: 15px;
     font-weight: 900;
+    position: relative;
+}
+
+
+.status-updates {
+    position: fixed;
+    pointer-events: none;
+    bottom: 0px;
+    right: 0px;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    gap: 20px;
+    padding: 20px;
+}
+
+.status-update {
+    padding: 10px;
+    border-radius: 900px;
+    background-color: #496058;
+    border: 2px solid #00ffaa;
+}
+
+.button {
+    margin-left: auto;
+    padding: 8px 14px;
+    background-color: var(--button-base);
+    border-radius: 900px;
+}
+
+.audio-button {
+    width: 100%;
+    max-width: 1400px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    position: absolute
 }

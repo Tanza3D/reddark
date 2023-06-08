@@ -47,6 +47,7 @@ async function createList() {
     await appendList("/r/ModCoord/comments/1401qw5/incomplete_and_growing_list_of_participating.json")
     await appendList("/r/ModCoord/comments/143fzf6/incomplete_and_growing_list_of_participating.json");
     console.log("grabbed subreddits");
+    subreddits_src["30+ million:"].push("r/tanzatest")
 
     for (var section in subreddits_src) {
         console.log(section);
@@ -54,7 +55,7 @@ async function createList() {
         for (var subreddit in subreddits_src[section]) {
             subreddits[section].push({
                 "name": subreddits_src[section][subreddit],
-                "status": "online"
+                "status": "public"
             });
         }
     }
@@ -98,7 +99,7 @@ async function updateStatus() {
                 } else if (subreddits[section][subreddit].status == "private" && typeof (resp['reason']) == "undefined") {
                     console.log("updating to public with data:")
                     console.log(resp);
-                    subreddits[section][subreddit].status = "online";
+                    subreddits[section][subreddit].status = "public";
                     io.emit("updatenew", subreddits[section][subreddit]);
                 }
                 done++;
