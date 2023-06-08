@@ -93,7 +93,7 @@ async function updateStatus() {
             request.httpsGet("/" + subreddits[section][subreddit].name + ".json").then(function (data) {
                 //console.log("checked " + subreddits[section][subreddit].name)
                 var resp = JSON.parse(data);
-                if (typeof (resp['reason']) != "undefined" && subreddits[section][subreddit].status != "private") {
+                if (typeof (resp['reason']) != "undefined" && resp['reason'] == "private" && subreddits[section][subreddit].status != "private") {
                     //console.log(subreddits[section][subreddit].status);
                     subreddits[section][subreddit].status = "private";
                     if (firstCheck == false)
