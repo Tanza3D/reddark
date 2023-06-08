@@ -4,6 +4,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 var request = require("./requests.js");
+var config = require("./config.js")
 const io = new Server(server, {
     cors: {
         origin: "https://reddark.untone.uk/",
@@ -76,8 +77,8 @@ io.on('connection', (socket) => {
     console.log('a user connected - currently connected users: ' + io.engine.clientsCount);
 });
 
-server.listen(3210, () => {
-    console.log('listening on *:3210');
+server.listen(config.port, () => {
+    console.log('listening on *:' + config.port);
 });
 
 

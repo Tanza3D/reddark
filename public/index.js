@@ -68,10 +68,11 @@ function updateSubreddit(data, _new = false) {
 function genItem(name, status) {
     var _item = document.createElement("div");
     var _status = document.createElement("p");
-    var _title = document.createElement("h3");
+    var _title = document.createElement("a");
     _item.className = "subreddit";
     _title.innerHTML = name;
     _status.innerHTML = status;
+    _title.href = "https://reddit.com/" + name;
     _item.id = name;
     if (status != "public") {
         _item.classList.add("subreddit-private");
@@ -79,6 +80,11 @@ function genItem(name, status) {
     _item.appendChild(_title);
     _item.appendChild(_status);
     return _item;
+}
+
+function hidePublicSubreddits() {
+    document.getElementById("list").classList.toggle("hide-public");
+    document.getElementById("hide-public").classList.toggle("toggle-enabled");
 }
 
 function fillSubredditsList(data) {
