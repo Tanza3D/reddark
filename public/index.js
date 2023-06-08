@@ -1,6 +1,8 @@
 var socket = io("https://reddark.untone.uk/");
 
+var loaded = false;
 socket.on("subreddits", (data) => {
+    loaded = false;
     document.getElementById("list").innerHTML = "Loading...";
     console.log(data);
     fillSubredditsList(data);
@@ -11,6 +13,9 @@ socket.on("update", (data) => {
     updateSubreddit(data);
 })
 
+socket.on('disconnect', function() {
+    loaded = false;
+ });
 socket.on("updatenew", (data) => {
     if(data.status == "private") {
         console.log("NEW ONE HAS GONE, SO LONG");
@@ -21,6 +26,7 @@ socket.on("updatenew", (data) => {
     console.log(data);
 })
 function updateSubreddit(data) {
+    if(!loaded) return;
     if(data.status == "private") {
         document.getElementById(data.name).classList.add("subreddit-private");
     } else {
@@ -55,4 +61,5 @@ function fillSubredditsList(data) {
         }
         document.getElementById("list").appendChild(sectionGrid);
     }
+    loaded = true;
 }
