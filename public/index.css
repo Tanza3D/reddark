@@ -139,11 +139,12 @@ a {
 
 .section-grid {
     display: grid;
-grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
-grid-auto-rows: 1fr;
-width: 100%;
-grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+    grid-auto-rows: 1fr;
+    width: 100%;
+    grid-gap: 10px;
 }
+
 .subreddit a {
     margin: 0px;
     font-size: 15px;
@@ -152,10 +153,12 @@ grid-gap: 10px;
     text-decoration: none;
     font-weight: 500;
 }
+
 .subreddit p {
     margin: 0px;
     color: var(--text-muted)
 }
+
 .subreddit-private {
     color: #00ffaa !important;
     text-shadow: 0px 0px 20px #00ffaa !important;
@@ -163,7 +166,9 @@ grid-gap: 10px;
     font-weight: 900;
     position: relative;
 }
-.subreddit-private p, .subreddit-private  a {
+
+.subreddit-private p,
+.subreddit-private a {
     color: #00ffaa !important;
 }
 
@@ -171,6 +176,7 @@ grid-gap: 10px;
 .hide-public .subreddit {
     display: none;
 }
+
 .hide-public .subreddit-private {
     display: inherit;
     text-shadow: none;
@@ -214,13 +220,16 @@ grid-gap: 10px;
 .tools-left {
     margin-left: auto;
 }
+
 strong {
     font-weight: 900;
 }
+
 light {
     font-weight: 300;
     font-size: 70%;
 }
+
 .toggle-box {
     width: 32px;
     height: 32px;
@@ -229,10 +238,12 @@ light {
     border-radius: 32px;
     position: relative;
 }
+
 .toggle {
     display: flex;
     align-items: center;
 }
+
 .toggle-enabled .toggle-box:after {
     content: "";
     height: 16px;
@@ -244,8 +255,9 @@ light {
     background-color: #fff;
 }
 
-.amount, .tools {
-    padding: 8px;
+.amount,
+.tools {
+    padding: 8px 0px;
     background-color: var(--background);
     width: 100%;
 }
@@ -257,8 +269,13 @@ light {
     z-index: 42;
     box-sizing: border-box;
 }
-#amount, header, main, footer {
+
+#amount,
+header,
+main,
+footer {
     max-width: 1400px;
+    padding: 0px 20px;
     margin: 0px auto;
 }
 
@@ -270,6 +287,7 @@ light {
     width: 100%;
     max-width: 1400px;
     margin: 0px auto;
+    padding: 0px 20px;
     display: flex;
     align-items: center;
 }
