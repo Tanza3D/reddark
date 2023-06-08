@@ -169,6 +169,7 @@ a {
 
 .subreddit-private p,
 .subreddit-private a {
+    word-wrap: anywhere;
     color: #00ffaa !important;
 }
 
