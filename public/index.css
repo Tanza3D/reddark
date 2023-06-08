@@ -186,6 +186,7 @@ grid-gap: 10px;
     width: 300px;
     gap: 20px;
     padding: 20px;
+    z-index: 900;
 }
 
 .status-update {
