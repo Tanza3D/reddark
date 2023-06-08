@@ -272,9 +272,7 @@ light {
     display: flex;
     align-items: center;
 }
-.mainList h1:first-child {
-    display: none;
-}
+
 .mainList h1 {
     position: sticky;
     top: 40px;

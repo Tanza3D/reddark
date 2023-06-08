@@ -93,7 +93,7 @@ function fillSubredditsList(data) {
     document.getElementById("list").innerHTML = "";
    
     for (var section in data) {
-        document.getElementById("list").innerHTML += "<h1>" + section + "</h1>";
+        if(section != "") document.getElementById("list").innerHTML += "<h1>" + section + "</h1>";
         var sectionGrid = Object.assign(document.createElement("div"), { "classList": "section-grid" })
         for (var subreddit of data[section]) {
             console.log(subreddit);
