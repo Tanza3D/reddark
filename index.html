@@ -1,12 +1,15 @@
-<link rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="index.css?v=3">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reddark</title>
     <meta name="description" content="An open source website to watch subreddits going dark">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 115 115%22><text y=%22.9em%22 font-size=%2290%22>✊</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 115 115%22><text y=%22.9em%22 font-size=%2290%22>✊</text></svg>">
 </head>
+
 <body>
     <header>
         <h1>✊ Reddark</h1>
@@ -20,11 +23,13 @@
             The website is in Beta. Contribute <a href="https://github.com/Tanza3D/reddark"
                 title="Browse the code source on GitHub">here</a>.
         </p>
-        <p>Due to slow rollout on reddit's side, some subreddits may flash public and private, if this is happening, it means that the subreddit just changed their publicity type.</p>
+        <p>Due to slow rollout on reddit's side, some subreddits may flash public and private, if this is happening, it
+            means that the subreddit just changed their publicity type.</p>
     </header>
     <div class="audio-button">
-    <div class="button" id="enable_sounds">Enable sound alerts</div>
-</div>
+        <div class="button" id="enable_sounds">Enable sound alerts</div>
+    </div>
+    <h3 id="amount"></h1>
     <main>
         <ul class="mainList" id="list">Loading...</ul>
     </main>
@@ -36,10 +41,10 @@
     </footer>
 
     <div class="status-updates" id="statusupdates">
-       <!--  <div class="status-update">
+        <!--  <div class="status-update">
             <p><strong>test</strong> test test test</p>
         </div> -->
     </div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
-<script src="index.js?v=2"></script>
+<script src="index.js?v=3"></script>

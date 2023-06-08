@@ -20,6 +20,9 @@ document.getElementById("enable_sounds").addEventListener("click", function () {
 })
 var socket = io();
 
+var amount = 0;
+var dark = 0;
+
 var loaded = false;
 socket.on("subreddits", (data) => {
     loaded = false;
@@ -39,8 +42,10 @@ socket.on('disconnect', function () {
 socket.on("updatenew", (data) => {
     if (data.status == "private") {
         console.log("NEW ONE HAS GONE, SO LONG");
+        dark++;
     } else {
         console.log("one has returned? :/");
+        dark--;
     }
     updateSubreddit(data, true);
     console.log(data);
@@ -56,6 +61,7 @@ function updateSubreddit(data, _new = false) {
         if (_new) audioSystem.play("public")
         document.getElementById(data.name).classList.remove("subreddit-private");
     }
+    updateStatusText();
     document.getElementById(data.name).querySelector("p").innerHTML = data.status;
 }
 
@@ -76,19 +82,30 @@ function genItem(name, status) {
 }
 
 function fillSubredditsList(data) {
+    dark = 0;
+    amount = 0;
     document.getElementById("list").innerHTML = "";
+   
     for (var section in data) {
         document.getElementById("list").innerHTML += "<h1>" + section + "</h1>";
         var sectionGrid = Object.assign(document.createElement("div"), { "classList": "section-grid" })
         for (var subreddit of data[section]) {
             console.log(subreddit);
+            amount++;
+            if(subreddit.status == "private") {
+                dark++;
+            }
             sectionGrid.appendChild(genItem(subreddit.name, subreddit.status));
         }
         document.getElementById("list").appendChild(sectionGrid);
     }
     loaded = true;
+    updateStatusText();
 }
 
+function updateStatusText() {
+    document.getElementById("amount").innerHTML = "<strong>"+dark+"</strong><light>/"+amount+"</light> subreddits are currently dark.";
+}
 function newStatusUpdate(text) {
     var item = Object.assign(document.createElement("div"), { "className": "status-update" });
     item.innerHTML = text;

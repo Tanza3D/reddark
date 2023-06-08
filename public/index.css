@@ -195,3 +195,11 @@ grid-gap: 10px;
     align-items: center;
     position: absolute
 }
+
+strong {
+    font-weight: 900;
+}
+light {
+    font-weight: 300;
+    font-size: 70%;
+}
