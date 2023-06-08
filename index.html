@@ -20,16 +20,27 @@
             to find out why.</h2>
 
         <p>
-            The website is in Beta. Contribute <a href="https://github.com/Tanza3D/reddark"
-                title="Browse the code source on GitHub">here</a>.
+            Like the website? Contribute <a href="https://github.com/Tanza3D/reddark"
+                title="Browse the code source on GitHub">here!</a>
         </p>
         <p>Due to slow rollout on reddit's side, some subreddits may flash public and private, if this is happening, it
             means that the subreddit just changed their publicity type.</p>
     </header>
-    <div class="audio-button">
-        <div class="button" id="enable_sounds">Enable sound alerts</div>
+    <div class="tools">
+        <div class="tools-inner">
+            <div class="toggle" onclick="hidePublicSubreddits()" id="hide-public">
+                <div class="toggle-box"></div>
+                <p>Hide public subreddits</p>
+            </div>
+            <div class="tools-left">
+                <div class="button" id="enable_sounds">Enable sound alerts</div>
+            </div>
+        </div>
     </div>
-    <h3 id="amount"></h1>
+    <div class="amount">
+        <h3 id="amount">
+        </h3>
+    </div>
     <main>
         <ul class="mainList" id="list">Loading...</ul>
     </main>

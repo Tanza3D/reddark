@@ -4,6 +4,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 var request = require("./requests.js");
+var config = require("./config.js")
 const io = new Server(server, {
     cors: {
         origin: "https://reddark.untone.uk/",
@@ -68,12 +69,16 @@ async function createList() {
 firstCheck = false;
 
 io.on('connection', (socket) => {
-    socket.emit("subreddits", subreddits);
+    if(firstCheck == false) {
+        socket.emit("subreddits", {"Loading...": []});
+    } else {
+        socket.emit("subreddits", subreddits);
+    }
     console.log('a user connected - currently connected users: ' + io.engine.clientsCount);
 });
 
-server.listen(3210, () => {
-    console.log('listening on *:3210');
+server.listen(config.port, () => {
+    console.log('listening on *:' + config.port);
 });
 
 
@@ -108,6 +113,7 @@ async function updateStatus() {
                     console.log("JUST ABOUT DONE!!!");
                     updateStatus();
                     firstCheck = true;
+                    io.emit("subreddits", subreddits);
                 }
             });
         }
