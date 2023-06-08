@@ -197,7 +197,9 @@ a {
 }
 
 .status-update {
+    pointer-events: all;
     padding: 10px;
+    cursor: pointer;
     border-radius: 900px;
     background-color: #496058;
     border: 2px solid #00ffaa;

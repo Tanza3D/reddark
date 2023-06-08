@@ -48,7 +48,7 @@ async function createList() {
     await appendList("/r/ModCoord/comments/1401qw5/incomplete_and_growing_list_of_participating.json")
     await appendList("/r/ModCoord/comments/143fzf6/incomplete_and_growing_list_of_participating.json");
     console.log("grabbed subreddits");
-    //subreddits_src["30+ million:"].push("r/tanzatest")
+    subreddits_src["30+ million:"].push("r/tanzatest")
 
     for (var section in subreddits_src) {
         console.log(section);

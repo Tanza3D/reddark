@@ -54,15 +54,30 @@ socket.on("updatenew", (data) => {
     updateSubreddit(data, true);
     console.log(data);
 })
+function doScroll(el) {
+    console.log(el);
+    const elementRect = el.getBoundingClientRect();
+    const absoluteElementTop = elementRect.top + window.pageYOffset;
+    const middle = absoluteElementTop - (window.innerHeight / 2);
+    window.scrollTo(0, middle);
+}
 function updateSubreddit(data, _new = false) {
     if (!loaded) return;
     if (data.status == "private") {
-        if (_new) newStatusUpdate("<strong>" + data.name + "</strong> has gone private!")
-        if (_new) audioSystem.play("privated")
+        if (_new) {
+            newStatusUpdate("<strong>" + data.name + "</strong> has gone private!", function () {
+                doScroll(document.getElementById(data.name));
+            })
+            audioSystem.play("privated")
+        }
         document.getElementById(data.name).classList.add("subreddit-private");
     } else {
-        if (_new) newStatusUpdate("<strong>" + data.name + "</strong> has gone public.")
-        if (_new) audioSystem.play("public")
+        if (_new) {
+            newStatusUpdate("<strong>" + data.name + "</strong> has gone public.", function () {
+                doScroll(document.getElementById(data.name));
+            })
+            audioSystem.play("public")
+        }
         document.getElementById(data.name).classList.remove("subreddit-private");
     }
     updateStatusText();
@@ -95,14 +110,14 @@ function fillSubredditsList(data) {
     dark = 0;
     amount = 0;
     document.getElementById("list").innerHTML = "";
-   
+
     for (var section in data) {
-        if(section != "") document.getElementById("list").innerHTML += "<h1>" + section + "</h1>";
+        if (section != "") document.getElementById("list").innerHTML += "<h1>" + section + "</h1>";
         var sectionGrid = Object.assign(document.createElement("div"), { "classList": "section-grid" })
         for (var subreddit of data[section]) {
             console.log(subreddit);
             amount++;
-            if(subreddit.status == "private") {
+            if (subreddit.status == "private") {
                 dark++;
             }
             sectionGrid.appendChild(genItem(subreddit.name, subreddit.status));
@@ -114,13 +129,18 @@ function fillSubredditsList(data) {
 }
 
 function updateStatusText() {
-    document.getElementById("amount").innerHTML = "<strong>"+dark+"</strong><light>/"+amount+"</light> subreddits are currently dark.";
+    document.getElementById("amount").innerHTML = "<strong>" + dark + "</strong><light>/" + amount + "</light> subreddits are currently dark.";
 }
-function newStatusUpdate(text) {
+function newStatusUpdate(text, callback = null) {
     var item = Object.assign(document.createElement("div"), { "className": "status-update" });
     item.innerHTML = text;
     document.getElementById("statusupdates").appendChild(item);
     setTimeout(() => {
         item.remove();
     }, 10000);
+    if (callback != null) {
+        item.addEventListener("click", function () {
+            callback();
+        })
+    }
 }
