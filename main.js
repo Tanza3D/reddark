@@ -92,6 +92,13 @@ async function updateStatus() {
             todo++;
             request.httpsGet("/" + subreddits[section][subreddit].name + ".json").then(function (data) {
                 //console.log("checked " + subreddits[section][subreddit].name)
+                if(data.startsWith("<")) {
+                    console.log("We're probably getting blocked... - " + resp);
+                    setTimeout(() => {
+                        updateStatus();
+                    }, 10000);
+                    return;
+                }
                 var resp = JSON.parse(data);
                 if (typeof (resp['message']) != "undefined" && resp['error'] == 500) {
                     updateStatus();
