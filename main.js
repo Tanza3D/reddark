@@ -94,7 +94,8 @@ async function updateStatus() {
                 //console.log("checked " + subreddits[section][subreddit].name)
                 var resp = JSON.parse(data);
                 if (typeof (resp['message']) != "undefined" && resp['error'] == 500) {
-                    continue;
+                    updateStatus();
+                    return;
                 }
                 if (typeof (resp['reason']) != "undefined" && resp['reason'] == "private" && subreddits[section][subreddit].status != "private") {
                     //console.log(subreddits[section][subreddit].status);
