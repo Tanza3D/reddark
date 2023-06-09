@@ -119,6 +119,7 @@ async function updateStatus() {
                 if (done > (todo - 2)) {
                     updateStatus();
                     console.log("FINISHED CHECK (or close enough to)");
+                    return;
                 }
             });
         }
