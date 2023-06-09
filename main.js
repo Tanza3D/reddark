@@ -67,41 +67,55 @@ async function createList() {
 
 
 firstCheck = false;
-
+var countTimeout = null;
 io.on('connection', (socket) => {
     if (firstCheck == false) {
         socket.emit("loading");
     } else {
         socket.emit("subreddits", subreddits);
     }
-    console.log('a user connected - currently connected users: ' + io.engine.clientsCount);
+    clearTimeout(countTimeout);
+    countTimeout = setTimeout(() => {
+        console.log('currently connected users: ' + io.engine.clientsCount);
+    }, 500);
 });
 
 server.listen(config.port, () => {
     console.log('listening on *:' + config.port);
 });
-
+var checkCounter = 0;
 
 async function updateStatus() {
     var new_status = [];
     var todo = 0;
     var done = 0;
     var finished = false;
+    const stackTrace = new Error().stack
+    checkCounter++;
+    var doReturn = false;
+    console.log("Starting check " + checkCounter + " with stackTrace: " + stackTrace);
     for (let section in subreddits) {
         for (let subreddit in subreddits[section]) {
+            if(doReturn) return;
             todo++;
             request.httpsGet("/" + subreddits[section][subreddit].name + ".json").then(function (data) {
+                if(doReturn) return;
                 //console.log("checked " + subreddits[section][subreddit].name)
                 if(data.startsWith("<")) {
                     console.log("We're probably getting blocked... - " + resp);
                     setTimeout(() => {
                         updateStatus();
                     }, 10000);
+                    doReturn = true;
                     return;
                 }
                 var resp = JSON.parse(data);
                 if (typeof (resp['message']) != "undefined" && resp['error'] == 500) {
-                    updateStatus();
+                    console.log("We're probably getting blocked... (500) - " + resp);
+                    setTimeout(() => {
+                        updateStatus();
+                    }, 10000);
+                    doReturn = true;
                     return;
                 }
                 if (typeof (resp['reason']) != "undefined" && resp['reason'] == "private" && subreddits[section][subreddit].status != "private") {
@@ -123,9 +137,9 @@ async function updateStatus() {
                     io.emit("subreddits", subreddits);
                     firstCheck = true;
                 }
-                if (done > (todo - 2)) {
+                if (done == todo) {
                     updateStatus();
-                    console.log("FINISHED CHECK (or close enough to)");
+                    console.log("FINISHED CHECK (or close enough to) - num " + checkCounter);
                     return;
                 }
             });
