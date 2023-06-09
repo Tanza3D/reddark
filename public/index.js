@@ -27,12 +27,10 @@ var loaded = false;
 socket.on("subreddits", (data) => {
     loaded = false;
     document.getElementById("list").innerHTML = "Loading...";
-    console.log(data);
     fillSubredditsList(data);
 })
 
 socket.on("update", (data) => {
-    console.log(data);
     updateSubreddit(data);
 })
 socket.on("loading", () => {
@@ -52,10 +50,8 @@ socket.on("updatenew", (data) => {
         dark--;
     }
     updateSubreddit(data, true);
-    console.log(data);
 })
 function doScroll(el) {
-    console.log(el);
     const elementRect = el.getBoundingClientRect();
     const absoluteElementTop = elementRect.top + window.pageYOffset;
     const middle = absoluteElementTop - (window.innerHeight / 2);
@@ -115,7 +111,6 @@ function fillSubredditsList(data) {
         if (section != "") document.getElementById("list").innerHTML += "<h1>" + section + "</h1>";
         var sectionGrid = Object.assign(document.createElement("div"), { "classList": "section-grid" })
         for (var subreddit of data[section]) {
-            console.log(subreddit);
             amount++;
             if (subreddit.status == "private") {
                 dark++;
