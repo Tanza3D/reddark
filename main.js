@@ -120,12 +120,12 @@ async function updateStatus() {
                 //console.log("checked " + subreddits[section][subreddit].name)
                 
                 if (data.startsWith("<")) {
-                    console.log("We're probably getting blocked... - " + resp);
+                    console.log("We're probably getting blocked... - " + data);
                     stop();
                     return;
                 }
-                if(!isJson(resp)) {
-                    console.log("Response is not JSON? We're probably getting blocked... - " + resp);
+                if(!isJson(data)) {
+                    console.log("Response is not JSON? We're probably getting blocked... - " + data);
                     stop();
                     return;
                 }
