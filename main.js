@@ -87,7 +87,6 @@ var checkCounter = 0;
 
 async function updateStatus() {
     var httpsRequests = [];
-    var finished = false;
     const stackTrace = new Error().stack
     checkCounter++;
     console.log("Starting check " + checkCounter + " with stackTrace: " + stackTrace);
