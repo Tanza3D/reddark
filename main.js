@@ -160,10 +160,7 @@ async function updateStatus() {
                 }
             }).catch(function (err) {
                 console.log("We're probably getting blocked... - " + err);
-                setTimeout(() => {
-                    updateStatus();
-                }, 10000);
-                doReturn = true;
+                stop();
                 return;
             });
         }
