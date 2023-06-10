@@ -43,6 +43,13 @@ body {
     background: #202b38;
     background: var(--background-body);
     text-rendering: optimizeLegibility;
+    --width: 75vw;
+}
+
+@media screen and (max-width: 900px) {
+    body {
+        --width: calc(100vw - 50px);
+    }
 }
 
 h1,
@@ -277,20 +284,20 @@ light {
 header,
 main,
 footer {
-    max-width: 75vw;
-    
+    max-width: var(--width);
+
     margin: 0px auto;
 }
 
 #amount {
-    max-width: 75vw;
+    max-width: var(--width);
 }
 
 .tools-inner {
     width: 100%;
-    max-width: 75vw;
+    max-width: var(--width);
     margin: 0px auto;
-    
+
     display: flex;
     align-items: center;
 }
@@ -307,9 +314,11 @@ footer {
     border-bottom: 1px solid #fff2;
     z-index: 42;
 }
-footer  p {
+
+footer p {
     margin-top: 20px;
 }
+
 footer img {
     height: 50px;
     margin-top: 20px;
