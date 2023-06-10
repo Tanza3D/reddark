@@ -86,7 +86,6 @@ server.listen(config.port, () => {
 var checkCounter = 0;
 
 async function updateStatus() {
-    var new_status = [];
     var httpsRequests = [];
     var finished = false;
     const stackTrace = new Error().stack
