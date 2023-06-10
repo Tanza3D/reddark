@@ -277,20 +277,20 @@ light {
 header,
 main,
 footer {
-    max-width: 1400px;
-    padding: 0px 20px;
+    max-width: 75vw;
+    
     margin: 0px auto;
 }
 
 #amount {
-    max-width: 1400px;
+    max-width: 75vw;
 }
 
 .tools-inner {
     width: 100%;
-    max-width: 1400px;
+    max-width: 75vw;
     margin: 0px auto;
-    padding: 0px 20px;
+    
     display: flex;
     align-items: center;
 }
@@ -306,4 +306,11 @@ footer {
     background-color: var(--background-body);
     border-bottom: 1px solid #fff2;
     z-index: 42;
+}
+footer  p {
+    margin-top: 20px;
+}
+footer img {
+    height: 50px;
+    margin-top: 20px;
 }
