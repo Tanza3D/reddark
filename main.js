@@ -142,6 +142,13 @@ async function updateStatus() {
                     console.log("FINISHED CHECK (or close enough to) - num " + checkCounter);
                     return;
                 }
+            }).catch(function (err) {
+                console.log("We're probably getting blocked... - " + err);
+                setTimeout(() => {
+                    updateStatus();
+                }, 10000);
+                doReturn = true;
+                return;
             });
         }
     }
