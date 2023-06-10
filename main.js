@@ -117,8 +117,7 @@ async function updateStatus() {
             }
             request.httpsGet("/" + subreddits[section][subreddit].name + ".json").then(function (data) {
                 if (doReturn) return;
-                //console.log("checked " + subreddits[section][subreddit].name)
-                
+                //console.log("checked " + subreddits[section][subreddit].name)      
                 if (data.startsWith("<")) {
                     console.log("We're probably getting blocked... - " + data);
                     stop();
@@ -159,6 +158,10 @@ async function updateStatus() {
                     console.log("FINISHED CHECK (or close enough to) - num " + checkCounter);
                     return;
                 }
+            }).catch(function (err) {
+                console.log("We're probably getting blocked... - " + err);
+                stop();
+                return;
             });
         }
     }
