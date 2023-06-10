@@ -102,7 +102,7 @@ async function updateStatus() {
                 if(doReturn) return;
                 //console.log("checked " + subreddits[section][subreddit].name)
                 if(data.startsWith("<")) {
-                    console.log("We're probably getting blocked... - " + resp);
+                    console.log("We're probably getting blocked... - " + data);
                     setTimeout(() => {
                         updateStatus();
                     }, 10000);
