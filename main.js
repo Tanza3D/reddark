@@ -20,6 +20,17 @@ app.get('/', (req, res) => {
 });
 app.use(express.static('public'))
 
+function isJson(item) {
+    let value = typeof item !== "string" ? JSON.stringify(item) : item;
+    try {
+        value = JSON.parse(value);
+    } catch (e) {
+        return false;
+    }
+
+    return typeof value === "object" && value !== null;
+}
+
 const subreddits_src = {
 
 }
@@ -96,26 +107,32 @@ async function updateStatus() {
     console.log("Starting check " + checkCounter + " with stackTrace: " + stackTrace);
     for (let section in subreddits) {
         for (let subreddit in subreddits[section]) {
-            if(doReturn) return;
+            if (doReturn) return;
             todo++;
+            function stop() {
+                setTimeout(() => {
+                    updateStatus();
+                }, 10000);
+                doReturn = true;
+            }
             request.httpsGet("/" + subreddits[section][subreddit].name + ".json").then(function (data) {
-                if(doReturn) return;
+                if (doReturn) return;
                 //console.log("checked " + subreddits[section][subreddit].name)
-                if(data.startsWith("<")) {
+                
+                if (data.startsWith("<")) {
                     console.log("We're probably getting blocked... - " + resp);
-                    setTimeout(() => {
-                        updateStatus();
-                    }, 10000);
-                    doReturn = true;
+                    stop();
+                    return;
+                }
+                if(!isJson(resp)) {
+                    console.log("Response is not JSON? We're probably getting blocked... - " + resp);
+                    stop();
                     return;
                 }
                 var resp = JSON.parse(data);
                 if (typeof (resp['message']) != "undefined" && resp['error'] == 500) {
                     console.log("We're probably getting blocked... (500) - " + resp);
-                    setTimeout(() => {
-                        updateStatus();
-                    }, 10000);
-                    doReturn = true;
+                    stop();
                     return;
                 }
                 if (typeof (resp['reason']) != "undefined" && resp['reason'] == "private" && subreddits[section][subreddit].status != "private") {
