@@ -87,66 +87,68 @@ var checkCounter = 0;
 
 async function updateStatus() {
     var new_status = [];
-    var todo = 0;
-    var done = 0;
+    var httpsRequests = [];
     var finished = false;
     const stackTrace = new Error().stack
     checkCounter++;
-    var doReturn = false;
     console.log("Starting check " + checkCounter + " with stackTrace: " + stackTrace);
     for (let section in subreddits) {
         for (let subreddit in subreddits[section]) {
-            if(doReturn) return;
-            todo++;
-            request.httpsGet("/" + subreddits[section][subreddit].name + ".json").then(function (data) {
-                if(doReturn) return;
-                //console.log("checked " + subreddits[section][subreddit].name)
+            const httpsReq = request.httpsGet("/" + subreddits[section][subreddit].name + ".json").then((data) => {
                 if(data.startsWith("<")) {
-                    console.log("We're probably getting blocked... - " + resp);
-                    setTimeout(() => {
-                        updateStatus();
-                    }, 10000);
-                    doReturn = true;
+                    console.log("Request to Reddit errored - " + data);
+                    // error handling? the app will assume the sub is public
                     return;
                 }
+                
                 var resp = JSON.parse(data);
                 if (typeof (resp['message']) != "undefined" && resp['error'] == 500) {
-                    console.log("We're probably getting blocked... (500) - " + resp);
-                    setTimeout(() => {
-                        updateStatus();
-                    }, 10000);
-                    doReturn = true;
+                    console.log("Request to Reddit errored (500) - " + resp);
+                    // error handling? the app will assume the sub is public
                     return;
                 }
-                if (typeof (resp['reason']) != "undefined" && resp['reason'] == "private" && subreddits[section][subreddit].status != "private") {
-                    //console.log(subreddits[section][subreddit].status);
-                    subreddits[section][subreddit].status = "private";
-                    if (firstCheck == false)
-                        io.emit("update", subreddits[section][subreddit]);
-                    else
-                        io.emit("updatenew", subreddits[section][subreddit]);
 
+                if (typeof (resp['reason']) != "undefined" && resp['reason'] == "private" && subreddits[section][subreddit].status != "private") {
+                    // the subreddit is private and the app doesn't know about it yet
+                    subreddits[section][subreddit].status = "private";
+                    if (firstCheck == false) {
+                        io.emit("update", subreddits[section][subreddit]);
+                    } else {
+                        io.emit("updatenew", subreddits[section][subreddit]);
+                    }
                 } else if (subreddits[section][subreddit].status == "private" && typeof (resp['reason']) == "undefined") {
-                    console.log("updating to public with data:")
-                    console.log(resp);
+                    // the subreddit is public but the app thinks it's private
+                    console.log("updating to public with data - " + resp);
                     subreddits[section][subreddit].status = "public";
                     io.emit("updatenew", subreddits[section][subreddit]);
                 }
-                done++;
-                if (done > (todo - 2) && firstCheck == false) {
-                    io.emit("subreddits", subreddits);
-                    firstCheck = true;
+            }).catch((err) => {
+                if (err.message == "timed out") {
+                    console.log("Request to Reddit timed out");
+                } else {
+                    console.log("Request to Reddit errored - " + err);
                 }
-                if (done == todo) {
-                    updateStatus();
-                    console.log("FINISHED CHECK (or close enough to) - num " + checkCounter);
-                    return;
-                }
+                
+                // error handling? the app will assume the sub is public
             });
+            
+            httpsRequests.push(httpsReq);
         }
     }
+    
+    await Promise.all(httpsRequests);
+    
+    // all requests have now either been completed or errored
+    if (!firstCheck) {
+        io.emit("subreddits", subreddits);
+        firstCheck = true;
+    }
 }
-(async () => {
+
+async function run() {
     await createList();
-    await updateStatus();
-})();
+    updateStatus();
+    setInterval(updateStatus, config.updateInterval); // interval between calls set in the config file
+}
+
+run();
