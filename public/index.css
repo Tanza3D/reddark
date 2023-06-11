@@ -46,11 +46,7 @@ body {
     --width: 75vw;
 }
 
-@media screen and (max-width: 900px) {
-    body {
-        --width: calc(100vw - 50px);
-    }
-}
+
 
 h1,
 h2,
@@ -504,4 +500,31 @@ footer img {
 .large-counter-hidden {
     opacity: 0;
     pointer-events: none;
+}
+
+@media screen and (max-width: 900px) {
+    body {
+        --width: calc(100vw - 50px);
+    }
+    .tools-left {
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-end;
+    }
+    .button {
+        font-size: 15px;
+        padding: 4px 8px;
+    }
+    .amount-inner {
+        flex-direction: column-reverse;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+    #amount {
+        margin-left: 0px;;
+    }
+    #search-input {
+        width: 100%;
+        margin-bottom: 5px;
+    }
 }
