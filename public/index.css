@@ -206,20 +206,59 @@ a {
     bottom: 0px;
     right: 0px;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     width: 300px;
     gap: 20px;
     padding: 20px;
     z-index: 900;
 }
 
+.n40million {
+    --col: #ff3366 !important;
+}
+.n30million {
+    --col: #ff33d3 !important;
+}
+.n20million {
+    --col: #a333ff !important;
+}
+.n10million {
+    --col: #7733ff !important;
+}
+.n5million {
+    --col: #336dff !important;
+}
+.n1million {
+    --col: #33b8ff !important;
+}
+.n500k {
+    --col: #33d3ff !important;
+}
+.n250k {
+    --col: #33ff88 !important;
+}
+.n100k {
+    --col: #33ff6d !important;
+}
+.n50k {
+    --col: #b4ff33 !important;
+}
+.n5k {
+    --col: #717171 !important;
+}
+.nb5k {
+    --col: #2f2f2f !important;
+}
+
+
 .status-update {
+    --col: var(--links);
     pointer-events: all;
     padding: 10px;
     cursor: pointer;
     border-radius: 900px;
-    background-color: #496058;
-    border: 2px solid #00ffaa;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), var(--col);
+    border: 2px solid var(--col);
 }
 
 .button {
