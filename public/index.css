@@ -176,6 +176,20 @@ a {
     color: #00ffaa !important;
 }
 
+.subreddit-restricted {
+    color: #00ffaa !important;
+    text-shadow: 0px 0px 20px #00ffaa !important;
+    margin-bottom: 15px;
+    font-weight: 900;
+    position: relative;
+}
+
+.subreddit-restricted p,
+.subreddit-restricted a {
+    word-wrap: anywhere;
+    color: #00ffaa !important;
+}
+
 
 .hide-public .subreddit {
     display: none;
