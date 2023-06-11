@@ -52,7 +52,7 @@ socket.on("updatenew", (data) => {
     var _section = "";
     for (var section in subreddits) {
         for (var subreddit of subreddits[section]) {
-            if(subreddit.name == subreddit.name) {
+            if (subreddit.name == subreddit.name) {
                 _section = section.replace(":", "");
             }
         }
@@ -66,16 +66,17 @@ function doScroll(el) {
     window.scrollTo(0, middle);
 }
 function updateSubreddit(data, section, _new = false) {
-    if(section.includes("and below")) {
+    if (section.includes("and below")) {
         section_basename = "b5k"
     } else {
         var section_basename = section.replace(" ", "").replace(":", "").replace("+", "")
     }
     console.log(section_basename);
     if (!loaded) return;
+    var text = "<strong>" + data.name + "</strong> has gone private! (" + section + ")";
     if (data.status == "private") {
         if (_new) {
-            newStatusUpdate("<strong>" + data.name + "</strong> has gone private!<br>("+section+")", function () {
+            newStatusUpdate("<strong>" + data.name + "</strong> has gone private!<br>(" + section + ")", function () {
                 doScroll(document.getElementById(data.name));
             }, ["n" + section_basename])
             audioSystem.play("privated")
@@ -83,6 +84,7 @@ function updateSubreddit(data, section, _new = false) {
         document.getElementById(data.name).classList.add("subreddit-private");
     } else {
         if (_new) {
+            var text = "<strong>" + data.name + "</strong> has gone public. (" + section + ")";
             newStatusUpdate("<strong>" + data.name + "</strong> has gone public.", function () {
                 doScroll(document.getElementById(data.name));
             })
@@ -92,6 +94,16 @@ function updateSubreddit(data, section, _new = false) {
     }
     updateStatusText();
     document.getElementById(data.name).querySelector("p").innerHTML = data.status;
+
+    if (_new) {
+        var history_item = Object.assign(document.createElement("div"), { className: "history-item n" + section_basename });
+        var header = Object.assign(document.createElement("h1"), { innerHTML: text });
+        var textel = Object.assign(document.createElement("h3"), { innerHTML: new Date().toUTCString() });
+        history_item.appendChild(header);
+        history_item.appendChild(textel);
+        document.getElementById("counter-history").prepend(history_item);
+        document.getElementById("counter-history").scrollTo({ top: 0, behavior: 'smooth' });
+    }
 }
 
 function genItem(name, status) {
@@ -156,7 +168,7 @@ function newStatusUpdate(text, callback = null, _classes = []) {
             callback();
         }
     })
-    for(var _class of _classes) {
+    for (var _class of _classes) {
         console.log(_class);
         item.classList.add(_class);
     }
@@ -164,7 +176,7 @@ function newStatusUpdate(text, callback = null, _classes = []) {
 
 function toggleLargeCounter() {
     document.getElementById("large-counter").classList.toggle("large-counter-hidden");
-    if(document.getElementById("large-counter").classList.contains("large-counter-hidden")) {
+    if (document.getElementById("large-counter").classList.contains("large-counter-hidden")) {
         od.update(0);
     } else {
         od.update(0);
