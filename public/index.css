@@ -248,6 +248,8 @@ a {
     border-radius: 900px;
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), var(--col);
     border: 2px solid var(--col);
+    padding: 1em;
+    text-align: center;
 }
 @keyframes load {
     0% {
