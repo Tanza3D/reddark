@@ -106,7 +106,7 @@ if (config.prod == true) {
     });
 }
 var checkCounter = 0;
-
+var totalPrivateUsers = 0;
 async function updateStatus() {
     //return;
     var todo = 0;
@@ -149,6 +149,7 @@ async function updateStatus() {
                         if (typeof (resp['reason']) != "undefined" && resp['reason'] == "private" && subreddits[section][subreddit].status != "private") {
                             //console.log(subreddits[section][subreddit].status);
                             subreddits[section][subreddit].status = "private";
+                            addOrSubtractTotal(section, true);
                             if (firstCheck == false)
                                 io.emit("update", subreddits[section][subreddit]);
                             else
@@ -158,6 +159,7 @@ async function updateStatus() {
                             console.log("updating to public with data:")
                             console.log(resp);
                             subreddits[section][subreddit].status = "public";
+                            addOrSubtractTotal(section, false);
                             io.emit("updatenew", subreddits[section][subreddit]);
                         }
 
@@ -166,6 +168,7 @@ async function updateStatus() {
                             firstCheck = true;
                         }
                         if (done == todo) {
+                            getTotals()
                             setTimeout(() => {
                                 updateStatus();
                             }, 10000);
@@ -187,7 +190,111 @@ async function updateStatus() {
         }
     }
 }
+
+async function getTotals() {
+    sectionNum = 0;
+    totalPrivateUsersTemp = 0;
+    for (var section in subreddits_src) {
+        switch (section) {
+            case "40+ million:":
+                sectionNum = 40000000
+                break;
+            case "30+ million:":
+                sectionNum = 30000000
+                break;
+            case "20+ million:":
+                sectionNum = 20000000
+                break;
+            case "10+ million:":
+                sectionNum = 10000000
+                break;
+            case "5+ million:":
+                sectionNum = 5000000
+                break;
+            case "1+ million:":
+                sectionNum = 1000000
+                break;
+            case "500k+:":
+                sectionNum = 500000
+                break;
+            case "250k+:":
+                sectionNum = 250000
+                break;
+            case "100k+:":
+                sectionNum = 100000
+                break;
+            case "50k+:":
+                sectionNum = 50000
+                break;
+            case"5k+:":
+                sectionNum = 5000
+                break;
+            default:
+                sectionNum = 0
+                break;
+        }
+        for (var subreddit in subreddits_src[section]) { 
+            if (subreddits[section][subreddit].status == "private") {
+                totalPrivateUsersTemp += sectionNum;
+            }
+        }
+    }
+    totalPrivateUsers = totalPrivateUsersTemp;
+    console.log("Total users Updated: " + totalPrivateUsers + "\n");
+}
+
+async function addOrSubtractTotal(sectionString, addOrSubtract) {
+    sectionNum = 0;
+    switch (sectionString) {
+        case "40+ million:":
+            sectionNum = 40000000
+            break;
+        case "30+ million:":
+            sectionNum = 30000000
+            break;
+        case "20+ million:":
+            sectionNum = 20000000
+            break;
+        case "10+ million:":
+            sectionNum = 10000000
+            break;
+        case "5+ million:":
+            sectionNum = 5000000
+            break;
+        case "1+ million:":
+            sectionNum = 1000000
+            break;
+        case "500k+:":
+            sectionNum = 500000
+            break;
+        case "250k+:":
+            sectionNum = 250000
+            break;
+        case "100k+:":
+            sectionNum = 100000
+            break;
+        case "50k+:":
+            sectionNum = 50000
+            break;
+        case"5k+:":
+            sectionNum = 5000
+            break;
+        default:
+            sectionNum = 0
+            break;
+    }
+    if (addOrSubtract) {
+        totalPrivateUsers += sectionNum
+    }
+    else {
+        totalPrivateUsers -= sectionNum
+    }
+    //console.log("Total users Updated: " + totalPrivateUsers + "\n");
+}
+
+
 (async () => {
     await createList();
     await updateStatus();
+    await getTotals()
 })();
