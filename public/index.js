@@ -66,11 +66,10 @@ function doScroll(el) {
     window.scrollTo(0, middle);
 }
 function updateSubreddit(data, section, _new = false) {
-    if (section.includes("and below")) {
-        section_basename = "b5k"
-    } else {
-        var section_basename = section.replace(" ", "").replace(":", "").replace("+", "")
-    }
+    console.log(section);
+
+    var section_basename = section.replace(" ", "").replace(":", "").replace("+", "").replace(" ", "").replace("\r", "").replace("\n", "");
+    
     console.log(section_basename);
     if (!loaded) return;
     var text = "<strong>" + data.name + "</strong> has gone private! (" + section + ")";
