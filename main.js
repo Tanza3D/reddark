@@ -6,10 +6,11 @@ const { Server } = require("socket.io");
 var request = require("./requests.js");
 var config = require("./config.js")
 var { exec } = require('child_process');
+require('dotenv').config();
 
 const io = new Server(server, {
     cors: {
-        origin: "https://reddark.untone.uk/",
+        origin: process.env.ORIGIN,
         methods: ["GET", "POST"],
         transports: ['websocket'],
         credentials: true
