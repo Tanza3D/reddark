@@ -54,7 +54,7 @@
     <div class="amount">
         <div class="amount-inner">
             <input placeholder="Search" type="search" id="search-input" name="search" spellcheck="false"
-                onkeyup="this.value = this.value.replace(/[^\_||^a-z]/, '')">
+                onkeyup="this.value = this.value.replace(/[^\_||^a-z||^\d||^\/]/, '')">
             <h3 id="amount">
             </h3>
         </div>
