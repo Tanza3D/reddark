@@ -106,7 +106,7 @@ if (config.prod == true) {
     });
 }
 var checkCounter = 0;
-const totalPrivateUsers = 0;
+var totalPrivateUsers = 0;
 async function updateStatus() {
     //return;
     var todo = 0;
@@ -196,10 +196,10 @@ async function getTotals() {
     totalPrivateUsersTemp = 0;
     for (var section in subreddits_src) {
         switch (section) {
-            case "40+ million":
+            case "40+ million:":
                 sectionNum = 40000000
                 break;
-            case "30+ million":
+            case "30+ million:":
                 sectionNum = 30000000
                 break;
             case "20+ million:":
@@ -234,21 +234,22 @@ async function getTotals() {
                 break;
         }
         for (var subreddit in subreddits_src[section]) { 
-            if (subreddits[section][subreddit].status == private) {
+            if (subreddits[section][subreddit].status == "private") {
                 totalPrivateUsersTemp += sectionNum;
             }
         }
     }
     totalPrivateUsers = totalPrivateUsersTemp;
+    console.log("Total users Updated: " + totalPrivateUsers + "\n");
 }
 
 async function addOrSubtractTotal(sectionString, addOrSubtract) {
     sectionNum = 0;
     switch (sectionString) {
-        case "40+ million":
+        case "40+ million:":
             sectionNum = 40000000
             break;
-        case "30+ million":
+        case "30+ million:":
             sectionNum = 30000000
             break;
         case "20+ million:":
@@ -288,7 +289,7 @@ async function addOrSubtractTotal(sectionString, addOrSubtract) {
     else {
         totalPrivateUsers -= sectionNum
     }
-    
+    //console.log("Total users Updated: " + totalPrivateUsers + "\n");
 }
 
 
