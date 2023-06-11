@@ -97,7 +97,7 @@ function updateSubreddit(data, section, _new = false) {
     if (_new) {
         var history_item = Object.assign(document.createElement("div"), { className: "history-item n" + section_basename });
         var header = Object.assign(document.createElement("h1"), { innerHTML: text });
-        var textel = Object.assign(document.createElement("h3"), { innerHTML: new Date().toUTCString() });
+        var textel = Object.assign(document.createElement("h3"), { innerHTML: new Date().toISOString().replace("T", " ").replace(/\..+/, '') });
         history_item.appendChild(header);
         history_item.appendChild(textel);
         document.getElementById("counter-history").prepend(history_item);
