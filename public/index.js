@@ -42,7 +42,7 @@ socket.on('disconnect', function () {
     loaded = false;
 });
 socket.on("updatenew", (data) => {
-    if (data.status == "private") {
+    if (data.status == "private" || data.status == "restricted") {
         console.log("NEW ONE HAS GONE, SO LONG");
         dark++;
     } else {
@@ -135,7 +135,7 @@ function fillSubredditsList(data) {
         var sectionGrid = Object.assign(document.createElement("div"), { "classList": "section-grid" })
         for (var subreddit of data[section]) {
             amount++;
-            if (subreddit.status == "private") {
+            if (subreddit.status == "private" || subreddit.status == "restricted") {
                 dark++;
             }
             sectionGrid.appendChild(genItem(subreddit.name, subreddit.status));
