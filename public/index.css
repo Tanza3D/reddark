@@ -274,6 +274,7 @@ a {
     padding: 8px 14px;
     background-color: var(--background-body);
     border-radius: 900px;
+    cursor: pointer;
 }
 
 .tools {
