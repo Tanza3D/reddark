@@ -148,7 +148,7 @@ function newStatusUpdate(text, callback = null, _classes = []) {
     document.getElementById("statusupdates").appendChild(item);
     setTimeout(() => {
         item.remove();
-    }, 10000);
+    }, 20000);
 
     item.addEventListener("click", function () {
         item.remove();
