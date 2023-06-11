@@ -44,6 +44,10 @@
     <div class="amount">
         <h3 id="amount">
         </h3>
+        <form id="search" role="search" aria-label="On this page">
+            <label for="search-input">Search</label>
+            <input type="search" id="search-input" name="search" spellcheck="false" onkeyup="this.value = this.value.replace(/[^\_||^a-z]/, '')">
+          </form>
     </div>
     <main>
         <ul class="mainList" id="list">Loading...</ul>
@@ -64,3 +68,4 @@
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script src="index.js?v=10"></script>
+<script src="search.js" defer></script>
