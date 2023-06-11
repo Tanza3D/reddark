@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="index.css?v=11">
+<link rel="stylesheet" href="index.css?v=12">
 
 <head>
     <meta charset="UTF-8">
@@ -13,7 +13,8 @@
 
 <body>
     <header>
-        <small>Site should be back stable now! <a href="https://github.com/Tanza3D/reddark/issues/new">Make an issue</a> if anything seems wrong.</small>
+        <small>Site should be back stable now! <a href="https://github.com/Tanza3D/reddark/issues/new">Make an issue</a>
+            if anything seems wrong.</small>
         <h1>✊ Reddark</h1>
 
         <h2>These subreddits are going dark or read-only on June 12th and after. Some already are. Click <a
@@ -28,8 +29,9 @@
         <h3>Notes:</h3>
         <p>Due to slow rollout on reddit's side, some subreddits may flash public and private, if this is happening, it
             means that the subreddit just changed their publicity type.</p>
-        
-            <p style="padding-top: 6px;">Any subreddits which have just disabled posting will still be displayed as "Public".</p>
+
+        <p style="padding-top: 6px;">Any subreddits which have just disabled posting will still be displayed as
+            "Public".</p>
     </header>
     <div class="tools">
         <div class="tools-inner">
@@ -43,17 +45,22 @@
         </div>
     </div>
     <div class="amount">
-        <h3 id="amount">
-        </h3>
+        <div class="amount-inner">
+            <input placeholder="Search" type="search" id="search-input" name="search" spellcheck="false"
+                onkeyup="this.value = this.value.replace(/[^\_||^a-z]/, '')">
+            <h3 id="amount">
+            </h3>
+        </div>
     </div>
     <main>
         <ul class="mainList" id="list">Loading...</ul>
     </main>
 
     <footer>
-        <p>Code Source is <a href="https://github.com/Tanza3D/reddark" title="Browse the code source on GitHub">here</a> -
-        Join <a href="https://join-lemmy.org/instances" title="Join Lemmy instances">Lemmy</a> for less Reddit
-        shenanigans.</p>
+        <p>Code Source is <a href="https://github.com/Tanza3D/reddark" title="Browse the code source on GitHub">here</a>
+            -
+            Join <a href="https://join-lemmy.org/instances" title="Join Lemmy instances">Lemmy</a> for less Reddit
+            shenanigans.</p>
         <a href="https://untone.uk"><img src="https://id.untone.uk/public/img/branding/logo-text-light.svg"></a>
     </footer>
 
@@ -64,4 +71,5 @@
     </div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
-<script src="index.js?v=10"></script>
+<script src="index.js?v=12"></script>
+<script src="search.js?v=12" defer></script>

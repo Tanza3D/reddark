@@ -280,17 +280,38 @@ light {
     box-sizing: border-box;
 }
 
-#amount,
+.amount-inner {
+    display: flex;
+    align-items: center;
+}
+
+.amount-inner,
 header,
 main,
 footer {
     max-width: var(--width);
-
     margin: 0px auto;
 }
 
+
+.amount-inner input {
+    background-color: transparent;
+    color: white;
+    font-family: inherit;
+    border: 0px solid transparent;
+    outline: 0px solid transparent !important;
+    border-bottom: 1px solid #fff5;
+    padding: 5px;
+}
+
+.amount-inner input:focus {
+    border-bottom: 1px solid white;
+}
+
 #amount {
-    max-width: var(--width);
+    margin: 0px;
+    padding: 0px;
+    margin-left: auto;
 }
 
 .tools-inner {
@@ -322,4 +343,8 @@ footer p {
 footer img {
     height: 50px;
     margin-top: 20px;
+}
+
+.filtered {
+    display: none;
 }
