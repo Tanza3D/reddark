@@ -7,3 +7,15 @@ Reddark pulls the list of participating subreddits from the [threads on r/ModCoo
 ## Technologies
 This is using Express to host the frontend and Socket.io to serve data. Quite simple code, and not too hard to get your head around.
 This is based on the [Original work of D4llo](https://github.com/D4llo/Reddark) with permission.
+
+
+## Deploying
+
+A Docker container can be found at `ghcr.io/Tanza3D/reddark`, this can be used by running the following:
+`docker run ghcr.io/Tanza3D/reddark -p 8312:8312` and acessing the port at [http://localhost:8312](https://localhost:8312)
+set the `ORIGIN` env variable, to the site url
+
+### Kubernetes
+A helm chart exists, which can be deployed by the following:
+`helm repo add 0xemma https://0xemma.github.io/helm-charts`
+`helm install reddark 0xemma/reddark`
