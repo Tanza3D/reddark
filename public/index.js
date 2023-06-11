@@ -19,7 +19,7 @@ document.getElementById("enable_sounds").addEventListener("click", function () {
     }
 })
 var socket = io();
-
+var subreddits = {};
 var amount = 0;
 var dark = 0;
 
@@ -31,7 +31,7 @@ socket.on("subreddits", (data) => {
 })
 
 socket.on("update", (data) => {
-    updateSubreddit(data);
+    updateSubreddit(data, "");
 })
 socket.on("loading", () => {
     document.getElementById("list").innerHTML = "Server reloading...";
@@ -49,7 +49,16 @@ socket.on("updatenew", (data) => {
         console.log("one has returned? :/");
         dark--;
     }
-    updateSubreddit(data, true);
+    var _section = "";
+    for (var section in subreddits) {
+        for (var subreddit of subreddits[section]) {
+            if(subreddit.name == subreddit.name) {
+                _section = section.replace(": ", "");
+            }
+        }
+    }
+    
+    updateSubreddit(data, _section, true);
 })
 function doScroll(el) {
     const elementRect = el.getBoundingClientRect();
@@ -57,11 +66,11 @@ function doScroll(el) {
     const middle = absoluteElementTop - (window.innerHeight / 2);
     window.scrollTo(0, middle);
 }
-function updateSubreddit(data, _new = false) {
+function updateSubreddit(data, section, _new = false) {
     if (!loaded) return;
     if (data.status == "private") {
         if (_new) {
-            newStatusUpdate("<strong>" + data.name + "</strong> has gone private!", function () {
+            newStatusUpdate("<strong>" + data.name + "</strong> has gone private!<br>("+section+")", function () {
                 doScroll(document.getElementById(data.name));
             })
             audioSystem.play("privated")
@@ -106,7 +115,7 @@ function fillSubredditsList(data) {
     dark = 0;
     amount = 0;
     document.getElementById("list").innerHTML = "";
-
+    subreddits = data;
     for (var section in data) {
         if (section != "") document.getElementById("list").innerHTML += "<h1>" + section + "</h1>";
         var sectionGrid = Object.assign(document.createElement("div"), { "classList": "section-grid" })
