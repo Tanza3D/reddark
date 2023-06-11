@@ -236,6 +236,9 @@ a {
     --col: #2f2f2f !important;
 }
 
+.noscroll {
+    overflow: hidden !important;
+}
 
 .status-update {
     --col: var(--links);

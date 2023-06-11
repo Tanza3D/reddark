@@ -175,6 +175,7 @@ function newStatusUpdate(text, callback = null, _classes = []) {
 
 function toggleLargeCounter() {
     document.getElementById("large-counter").classList.toggle("large-counter-hidden");
+    document.body.classList.toggle("noscroll");
     if (document.getElementById("large-counter").classList.contains("large-counter-hidden")) {
         od.update(0);
     } else {
