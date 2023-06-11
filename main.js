@@ -66,7 +66,7 @@ async function createList() {
         subreddits[section] = [];
         for (var subreddit in subreddits_src[section]) {
             subreddits[section].push({
-                "name": subreddits_src[section][subreddit],
+                "name": subreddits_src[section][subreddit].replace("\n", "").replace("\r", ""),
                 "status": "public"
             });
         }
@@ -81,8 +81,10 @@ firstCheck = false;
 var countTimeout = null;
 io.on('connection', (socket) => {
     if (firstCheck == false) {
+        //console.log("sending loading");
         socket.emit("loading");
     } else {
+        //console.log("sending reddits");
         socket.emit("subreddits", subreddits);
     }
     clearTimeout(countTimeout);
@@ -97,10 +99,9 @@ server.listen(config.port, () => {
 var checkCounter = 0;
 
 async function updateStatus() {
-    var new_status = [];
     var todo = 0;
     var done = 0;
-    var finished = false;
+    var delay = 0;
     const stackTrace = new Error().stack
     checkCounter++;
     var doReturn = false;
@@ -115,60 +116,64 @@ async function updateStatus() {
                 }, 10000);
                 doReturn = true;
             }
-            request.httpsGet("/" + subreddits[section][subreddit].name + ".json").then(function (data) {
-                try {
-                    if (doReturn) return;
-                    //console.log("checked " + subreddits[section][subreddit].name)      
-                    if (data.startsWith("<")) {
-                        console.log("We're probably getting blocked... - " + data);
-                        stop();
-                        return;
-                    }
-                    if (!isJson(data)) {
-                        console.log("Response is not JSON? We're probably getting blocked... - " + data);
-                        stop();
-                        return;
-                    }
-                    var resp = JSON.parse(data);
-                    if (typeof (resp['message']) != "undefined" && resp['error'] == 500) {
-                        console.log("We're probably getting blocked... (500) - " + resp);
-                        stop();
-                        return;
-                    }
-                    if (typeof (resp['reason']) != "undefined" && resp['reason'] == "private" && subreddits[section][subreddit].status != "private") {
-                        //console.log(subreddits[section][subreddit].status);
-                        subreddits[section][subreddit].status = "private";
-                        if (firstCheck == false)
-                            io.emit("update", subreddits[section][subreddit]);
-                        else
-                            io.emit("updatenew", subreddits[section][subreddit]);
+            setTimeout(() => {
 
-                    } else if (subreddits[section][subreddit].status == "private" && typeof (resp['reason']) == "undefined") {
-                        console.log("updating to public with data:")
-                        console.log(resp);
-                        subreddits[section][subreddit].status = "public";
-                        io.emit("updatenew", subreddits[section][subreddit]);
-                    }
-                    done++;
-                    if (done > (todo - 2) && firstCheck == false) {
-                        io.emit("subreddits", subreddits);
-                        firstCheck = true;
-                    }
-                    if (done == todo) {
-                        updateStatus();
-                        console.log("FINISHED CHECK (or close enough to) - num " + checkCounter);
+                request.httpsGet("/" + subreddits[section][subreddit].name + ".json").then(function (data) {
+                    try {
+                        if (doReturn) return;
+                        done++;
+                        //console.log("checked " + subreddits[section][subreddit].name)      
+                        if (data.startsWith("<")) {
+                            console.log("We're probably getting blocked... - " + data);
+                            return;
+                        }
+                        if (!isJson(data)) {
+                            console.log("Response is not JSON? We're probably getting blocked... - " + data);
+                            return;
+                        }
+                        var resp = JSON.parse(data);
+                        if (typeof (resp['message']) != "undefined" && resp['error'] == 500) {
+                            console.log("We're probably getting blocked... (500) - " + resp);
+                            return;
+                        }
+                        if (typeof (resp['reason']) != "undefined" && resp['reason'] == "private" && subreddits[section][subreddit].status != "private") {
+                            //console.log(subreddits[section][subreddit].status);
+                            subreddits[section][subreddit].status = "private";
+                            if (firstCheck == false)
+                                io.emit("update", subreddits[section][subreddit]);
+                            else
+                                io.emit("updatenew", subreddits[section][subreddit]);
+
+                        } else if (subreddits[section][subreddit].status == "private" && typeof (resp['reason']) == "undefined") {
+                            console.log("updating to public with data:")
+                            console.log(resp);
+                            subreddits[section][subreddit].status = "public";
+                            io.emit("updatenew", subreddits[section][subreddit]);
+                        }
+                        
+                        if (done > (todo - 2) && firstCheck == false) {
+                            io.emit("subreddits", subreddits);
+                            firstCheck = true;
+                        }
+                        if (done == todo) {
+                            setTimeout(() => {
+                                updateStatus();
+                            }, 10000);
+                            console.log("FINISHED CHECK (or close enough to) - num " + checkCounter);
+                            return;
+                        }
+                    } catch {
+                        console.log("Something broke! We're probably getting blocked...");
+                        stop();
                         return;
                     }
-                } catch {
-                    console.log("Something broke! We're probably getting blocked...");
+                }).catch(function (err) {
+                    console.log("Request failed! We're probably getting blocked... - " + err);
                     stop();
                     return;
-                }
-            }).catch(function (err) {
-                console.log("Request failed! We're probably getting blocked... - " + err);
-                stop();
-                return;
-            });
+                });
+            }, delay);
+            delay+=1;
         }
     }
 }
