@@ -67,6 +67,15 @@ function updateSubreddit(data, _new = false) {
             audioSystem.play("privated")
         }
         document.getElementById(data.name).classList.add("subreddit-private");
+
+    }else if (data.status == "restricted") {
+        if (_new) {
+            newStatusUpdate("<strong>" + data.name + "</strong> has gone restricted!", function () {
+                doScroll(document.getElementById(data.name));
+            })
+            audioSystem.play("privated")
+        }
+        document.getElementById(data.name).classList.add("subreddit-restricted");
     } else {
         if (_new) {
             newStatusUpdate("<strong>" + data.name + "</strong> has gone public.", function () {
