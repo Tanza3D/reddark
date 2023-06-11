@@ -53,11 +53,10 @@ socket.on("updatenew", (data) => {
     for (var section in subreddits) {
         for (var subreddit of subreddits[section]) {
             if(subreddit.name == subreddit.name) {
-                _section = section.replace(": ", "");
+                _section = section.replace(":", "");
             }
         }
     }
-    
     updateSubreddit(data, _section, true);
 })
 function doScroll(el) {
@@ -67,12 +66,18 @@ function doScroll(el) {
     window.scrollTo(0, middle);
 }
 function updateSubreddit(data, section, _new = false) {
+    if(section.includes("and below")) {
+        section_basename = "b5k"
+    } else {
+        var section_basename = section.replace(" ", "").replace(":", "").replace("+", "")
+    }
+    console.log(section_basename);
     if (!loaded) return;
     if (data.status == "private") {
         if (_new) {
             newStatusUpdate("<strong>" + data.name + "</strong> has gone private!<br>("+section+")", function () {
                 doScroll(document.getElementById(data.name));
-            })
+            }, ["n" + section_basename])
             audioSystem.play("privated")
         }
         document.getElementById(data.name).classList.add("subreddit-private");
@@ -137,7 +142,7 @@ function updateStatusText() {
     od.update(dark);
     document.getElementById("lc-max").innerHTML = " <light>out of</light> " + amount;
 }
-function newStatusUpdate(text, callback = null) {
+function newStatusUpdate(text, callback = null, _classes = []) {
     var item = Object.assign(document.createElement("div"), { "className": "status-update" });
     item.innerHTML = text;
     document.getElementById("statusupdates").appendChild(item);
@@ -151,7 +156,10 @@ function newStatusUpdate(text, callback = null) {
             callback();
         }
     })
-
+    for(var _class of _classes) {
+        console.log(_class);
+        item.classList.add(_class);
+    }
 }
 
 function toggleLargeCounter() {
