@@ -40,7 +40,7 @@ async function appendList(url) {
     var sectionname = "";
     var data = await request.httpsGet(url);
     data = JSON.parse(data);
-    text = data[0]['data']['children'][0]['data']['selftext'];
+    text = data['data']['content_md'];
     //console.log(text);
     lines = text.split("\n");
     for (var line of lines) {
@@ -56,8 +56,8 @@ async function appendList(url) {
     subreddits_src[sectionname] = section;
 }
 async function createList() {
-    await appendList("/r/ModCoord/comments/1401qw5/incomplete_and_growing_list_of_participating.json")
-    await appendList("/r/ModCoord/comments/143fzf6/incomplete_and_growing_list_of_participating.json");
+    // getting the list of participating subs from the modcoord wiki page
+    await appendList("/r/ModCoord/wiki/index.json");
     console.log("grabbed subreddits");
     //subreddits_src["30+ million:"].push("r/tanzatest")
 
