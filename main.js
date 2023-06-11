@@ -5,11 +5,13 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 var request = require("./requests.js");
 var config = require("./config.js")
+var { exec } = require('child_process');
+
 const io = new Server(server, {
     cors: {
         origin: "https://reddark.untone.uk/",
         methods: ["GET", "POST"],
-        transports: ['websocket', 'polling'],
+        transports: ['websocket'],
         credentials: true
     },
     allowEIO3: true
@@ -92,13 +94,21 @@ io.on('connection', (socket) => {
         console.log('currently connected users: ' + io.engine.clientsCount);
     }, 500);
 });
-
-server.listen(config.port, () => {
-    console.log('listening on *:' + config.port);
-});
+if (config.prod == true) {
+    exec("rm /var/tmp/reddark.sock")
+    server.listen("/var/tmp/reddark.sock", () => {
+        console.log('listening on /var/tmp/reddark.sock');
+        exec("chmod 777 /var/tmp/reddark.sock")
+    });
+} else {
+    server.listen(config.port, () => {
+        console.log('listening on *:' + config.port);
+    });
+}
 var checkCounter = 0;
 
 async function updateStatus() {
+    //return;
     var todo = 0;
     var done = 0;
     var delay = 0;
@@ -150,7 +160,7 @@ async function updateStatus() {
                             subreddits[section][subreddit].status = "public";
                             io.emit("updatenew", subreddits[section][subreddit]);
                         }
-                        
+
                         if (done > (todo - 2) && firstCheck == false) {
                             io.emit("subreddits", subreddits);
                             firstCheck = true;
@@ -173,7 +183,7 @@ async function updateStatus() {
                     return;
                 });
             }, delay);
-            delay+=1;
+            delay += 1;
         }
     }
 }
