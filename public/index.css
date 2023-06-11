@@ -426,7 +426,7 @@ footer img {
 .large-counter-history {
     display: flex;
     flex-direction: column;
-    overflow: scroll;
+    overflow-y: scroll;
     position: fixed;
     top: 0;
     right: 0;
