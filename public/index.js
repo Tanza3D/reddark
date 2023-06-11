@@ -52,7 +52,7 @@ socket.on("updatenew", (data) => {
     var _section = "";
     for (var section in subreddits) {
         for (var subreddit of subreddits[section]) {
-            if (subreddit.name == subreddit.name) {
+            if (subreddit.name == data.name) {
                 _section = section.replace(":", "");
             }
         }
