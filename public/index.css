@@ -7,6 +7,8 @@
     --background-body: #202b38;
     --background: #161f27;
     --background-alt: #1a242f;
+    --background-button: #202b38;
+    --background-button-hover: #253240;
     --selection: #c0d5e8;
     --text-main: #e9f4fc;
     --text-bright: #c7d2dd;
@@ -270,10 +272,32 @@ a {
 .history-item h3 {
     font-size: 10px !important;
 }
+/* button style reset from https://css-tricks.com/overriding-default-button-styles/ */
+button {
+    color: inherit;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 100%;
+    line-height: 1.15;
+    margin: 0;
+    overflow: visible;
+    text-transform: none;
+    -webkit-appearance: button;
+    text-align: inherit;
+}
+
 .button {
     padding: 8px 14px;
-    background-color: var(--background-body);
+    background-color: var(--background-button);
     border-radius: 900px;
+    cursor: pointer;
+    text-align: center;
+}
+.button:hover {
+    background-color: var(--background-button-hover);
+}
+#hide-public {
     cursor: pointer;
 }
 
@@ -308,6 +332,7 @@ light {
     background-color: #fff1;
     border-radius: 32px;
     position: relative;
+    flex-shrink: 0;
 }
 
 .toggle {
@@ -458,6 +483,10 @@ footer img {
     position: fixed;
     top: 50px;
     left: 50px;
+    cursor: pointer;
+}
+.large-counter-close:hover {
+    background-color: #fff6;
 }
 
 .odometer.odometer-auto-theme,

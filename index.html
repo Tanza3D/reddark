@@ -13,14 +13,13 @@
 
 <body>
     <div class="large-counter large-counter-hidden" id="large-counter">
-        <div class="large-counter-close" onclick="toggleLargeCounter()">X</div>
+        <button class="large-counter-close" onclick="toggleLargeCounter()">X</button>
         <div class="large-counter-inner">
             <h1><span class="odemeter" id="lc-count">52</span><small id="lc-max">/amount</small></h1>
         </div>
         <div class="large-counter-history" id="counter-history">
             
         </div>
-    </div>
     </div>
     <header>
         <small>Watch a 24/7 stream of this site at <a href="https://twitch.tv/reddark_247">twitch.tv/reddark_247!</a></small>
@@ -44,13 +43,13 @@
     </header>
     <div class="tools">
         <div class="tools-inner">
-            <div class="toggle" onclick="hidePublicSubreddits()" id="hide-public">
+            <button class="toggle" onclick="hidePublicSubreddits()" id="hide-public">
                 <div class="toggle-box"></div>
                 <p>Hide public subreddits</p>
-            </div>
+            </button>
             <div class="tools-left">
-                <div class="button" onclick="toggleLargeCounter()">Large counter</div>
-                <div class="button" id="enable_sounds">Enable sound alerts</div>
+                <button class="button" onclick="toggleLargeCounter()">Large counter</button>
+                <button class="button" id="enable_sounds">Enable sound alerts</button>
             </div>
         </div>
     </div>
