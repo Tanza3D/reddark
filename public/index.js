@@ -125,6 +125,8 @@ function fillSubredditsList(data) {
 
 function updateStatusText() {
     document.getElementById("amount").innerHTML = "<strong>" + dark + "</strong><light>/" + amount + "</light> subreddits are currently dark.";
+    od.update(dark);
+    document.getElementById("lc-max").innerHTML = " <light>out of</light> " + amount;
 }
 function newStatusUpdate(text, callback = null) {
     var item = Object.assign(document.createElement("div"), { "className": "status-update" });
@@ -133,9 +135,31 @@ function newStatusUpdate(text, callback = null) {
     setTimeout(() => {
         item.remove();
     }, 10000);
-    if (callback != null) {
-        item.addEventListener("click", function () {
+
+    item.addEventListener("click", function () {
+        item.remove();
+        if (callback != null) {
             callback();
-        })
+        }
+    })
+
+}
+
+function toggleLargeCounter() {
+    document.getElementById("large-counter").classList.toggle("large-counter-hidden");
+    if(document.getElementById("large-counter").classList.contains("large-counter-hidden")) {
+        od.update(0);
+    } else {
+        od.update(0);
+        od.update(dark);
     }
 }
+
+
+od = new Odometer({
+    el: document.getElementById("lc-count"),
+    value: 0,
+    format: '',
+    theme: 'default'
+});
+
