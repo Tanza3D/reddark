@@ -87,7 +87,7 @@ function genItem(name, status) {
     _item.className = "subreddit";
     _title.innerHTML = name;
     _status.innerHTML = status;
-    _title.href = "https://reddit.com/" + name;
+    _title.href = "https://old.reddit.com/" + name;
     _item.id = name;
     if (status != "public") {
         _item.classList.add("subreddit-private");
