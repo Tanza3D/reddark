@@ -108,7 +108,7 @@ let checkCounter = 0;
 
 async function updateStatus() {
     //return;
-    const cooldownBetweenRequests = 100; // time between subreddit requests in milliseconds
+    const cooldownBetweenRequests = 50; // time between subreddit requests in milliseconds
     let todo = 0;
     let done = 0;
     let delay = 0;  // Incremented on the fly. Do not change.
@@ -131,6 +131,7 @@ async function updateStatus() {
                 // console.log(url)
                 request.httpsGet(url).then(function (data) {
                     try {
+
                         if (doReturn) return;
                         done++;
                         console.log("checked " + subreddits[section][subreddit].name)
@@ -143,28 +144,37 @@ async function updateStatus() {
                             return;
                         }
                         const resp = JSON.parse(data);
-                        if (typeof (resp['message']) != "undefined" && resp['error'] === 500) {
+
+                        let reasonPresent = typeof (resp['reason']) != "undefined" // only present if subreddit is private
+                        let subredditPreviouslyPrivate = subreddits[section][subreddit].status === "private";
+
+                        if (reasonPresent && resp['error'] === 500) {
                             console.log("We're probably getting blocked... (500) - " + resp);
                             return;
                         }
-                        if (typeof (resp['reason']) != "undefined" && resp['reason'] === "private" && subreddits[section][subreddit].status !== "private") {
-                            //console.log(subreddits[section][subreddit].status);
+
+                        // If previously public subreddit has become private
+                        if (reasonPresent && resp['reason'] === "private" && !subredditPreviouslyPrivate) {
                             subreddits[section][subreddit].status = "private";
-                            if (firstCheck === false)
+                            if (!firstCheck)
                                 io.emit("update", subreddits[section][subreddit]);
                             else
                                 io.emit("updatenew", subreddits[section][subreddit]);
 
-                        } else if (subreddits[section][subreddit].status === "private" && typeof (resp['reason']) == "undefined") {
+                        // if subreddit status was private and now "reason" is now undefined, mark as public
+                        } else if (subredditPreviouslyPrivate && !reasonPresent) {
                             console.log("updating to public with data:")
                             console.log(resp);
                             subreddits[section][subreddit].status = "public";
                             io.emit("updatenew", subreddits[section][subreddit]);
                         }
 
-                        if (done > (todo - 2) && firstCheck === false) {
+                        // uh i'm not sure lol
+                        if (done > (todo - 2) && !firstCheck) {
                             io.emit("subreddits", subreddits);
                         }
+
+                        // if all subreddits have been checked, start check over
                         if (done === todo) {
                             setTimeout(() => {
                                 updateStatus();
@@ -189,3 +199,7 @@ async function updateStatus() {
     await createList();
     await updateStatus();
 })();
+
+function checkIfRestricted(subreddit){
+
+}
