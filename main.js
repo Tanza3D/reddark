@@ -7,23 +7,6 @@ const request = require("./requests.js");
 const config = require("./config.js");
 let {exec} = require('child_process');
 
-const xpath = require('xpath');
-const DOMParser = require('xmldom').DOMParser
-
-const domOptions = {
-    locator: {},
-    errorHandler: {
-        warning: function (w) {
-        },
-        error: e => {
-            console.error(e)
-        },
-        fatalError: e => {
-            console.error(e)
-        }
-    }
-}
-
 const io = new Server(server, {
     cors: {
         origin: "https://reddark.untone.uk/",
@@ -135,6 +118,7 @@ async function updateStatus() {
     console.log("Starting check " + checkCounter);
     for (let section in subreddits) {
         for (let subreddit in subreddits[section]) {
+
             if (doReturn) return;
             todo++;
             function stop() {
@@ -144,7 +128,7 @@ async function updateStatus() {
                 doReturn = true;
             }
             setTimeout(() => {
-                let url = "/" + subreddits[section][subreddit].name + ".json";
+                let url = "/" + subreddits[section][subreddit].name + "/about.json";
                 request.httpsGet(url).then(function (data) {
                     try {
                         if (doReturn) return;
@@ -158,57 +142,37 @@ async function updateStatus() {
                             console.log("Response is not JSON? We're probably getting blocked... - " + data);
                             return;
                         }
+
                         const resp = JSON.parse(data);
 
-                        let reasonPresent = typeof (resp['reason']) != "undefined" // only present if subreddit is private
+                        let isPrivate = resp["error"] === 403       // this case occurs when subreddit is private
+                        let isRestricted = resp["data"] !== undefined &&
+                            resp["data"]["subreddit_type"] === "restricted"  // when subreddit is restricted
+                        let effectivelyPrivate = isPrivate || isRestricted; // if either is true, it's participating
+
                         let subredditPreviouslyPrivate = subreddits[section][subreddit].status === "private";
 
-                        if (reasonPresent && resp['error'] === 500) {
+                        if (resp['error'] === 500) {
                             console.log("We're probably getting blocked... (500) - " + resp);
                             return;
                         }
 
                         // If previously public subreddit has become private
-                        if (reasonPresent && resp['reason'] === "private" && !subredditPreviouslyPrivate) {
+                        if (effectivelyPrivate && !subredditPreviouslyPrivate) {
                             subreddits[section][subreddit].status = "private";
                             if (!firstCheck)
                                 io.emit("update", subreddits[section][subreddit]);
                             else
                                 io.emit("updatenew", subreddits[section][subreddit]);
+                            console.log(`PRIVATE: ${subreddits[section][subreddit].name}`)
+                            // console.log(resp);
 
-                        // if subreddit status was private and now "reason" is now undefined, mark as public
-                        } else if (subredditPreviouslyPrivate && !reasonPresent) {
-                            console.log("updating to public with data:")
-                            console.log(resp);
+                        // if subreddit status was private and is now public
+                        } else if (!effectivelyPrivate && subredditPreviouslyPrivate) {
+                            console.log(`PUBLIC: ${subreddits[section][subreddit].name}`)
+                            // console.log(resp);
                             subreddits[section][subreddit].status = "public";
                             io.emit("updatenew", subreddits[section][subreddit]);
-                        }
-
-                        // If a subreddit is public, check if it is restricted by analyzing the HTML of the page
-                        if(subreddits[section][subreddit].status === "public"){
-                            setTimeout(() => {  // Use a timeout block for page request to limit request rate
-                                let subredditElement = subreddits[section][subreddit]
-                                // Submit a request for the HTML of the page
-                                request.httpsGet(subredditElement.name).then(pageHTML => {
-
-                                    // Parse a nodal document model from the page HTML
-                                    // reddit is bad at making websites, so we have to tell the parser not to throw
-                                    // a hundred warnings
-                                    let doc = new DOMParser(domOptions).parseFromString(pageHTML)
-
-                                    // Use XPath to search for the span text that says "Restricted"
-                                    let nodes = xpath.select("//span[text()='Restricted']", doc)
-
-                                    // If said span is present, the subreddit isn't accepting submissions.
-                                    let isRestricted = nodes.length > 0;
-                                    if(isRestricted){
-                                        console.log(`[INFO] Found restricted subreddit: ${subredditElement.name}`)
-                                        subreddits[section][subreddit].status = "private";
-                                    } else{
-                                        subreddits[section][subreddit].status = "public";
-                                    }
-                                })
-                            }, cooldownBetweenRequests)
                         }
 
                         // uh i'm not sure lol
