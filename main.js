@@ -13,7 +13,7 @@ var { exec } = require('child_process');
 
 const io = new Server(server, {
     cors: {
-        origin: "https://reddark.untone.uk/",
+        origin: config.url,
         methods: ["GET", "POST"],
         transports: ['websocket'],
         credentials: true
@@ -125,7 +125,7 @@ async function updateStatus() {
     const stackTrace = new Error().stack
     checkCounter++;
     var doReturn = false;
-    console.log("Starting check " + checkCounter + " with stackTrace: " + stackTrace);
+    console.log("(THIS IS NOT AN ERROR) Starting check " + checkCounter + " with stackTrace: " + stackTrace);
     for (let section in subreddits) {
         for (let subreddit in subreddits[section]) {
             if (doReturn) return;
@@ -144,11 +144,11 @@ async function updateStatus() {
                         done++;
                         //console.log("checked " + subreddits[section][subreddit].name)      
                         if (data.startsWith("<")) {
-                            console.log("We're probably getting blocked... - " + data);
+                            console.log("We're probably getting blocked..." + config.logDataOnFail ? " - " + data : "");
                             return;
                         }
                         if (!isJson(data)) {
-                            console.log("Response is not JSON? We're probably getting blocked... - " + data);
+                            console.log("Response is not JSON? We're probably getting blocked..." + config.logDataOnFail ? " - " + data : "");
                             return;
                         }
                         var resp = JSON.parse(data);
