@@ -39,7 +39,7 @@ const subreddits_src = {
 const subreddits = {};
 async function appendList(url) {
     let section = [];
-    let sectionname = "";
+    let sectionName = "";
     let data = await request.httpsGet(url);
     data = JSON.parse(data);
     let text = data['data']['content_md'];
@@ -47,15 +47,15 @@ async function appendList(url) {
     let lines = text.split("\n");
     for (let line of lines) {
         if (line.startsWith("##") && !line.includes("Please") && line.includes(":")) {
-            if (section !== []) subreddits_src[sectionname] = section;
+            if (section !== []) subreddits_src[sectionName] = section;
             section = [];
-            sectionname = line.replace("##", "");
+            sectionName = line.replace("##", "");
         }
         if (line.startsWith("r/")) {
             section.push(line);
         }
     }
-    subreddits_src[sectionname] = section;
+    subreddits_src[sectionName] = section;
 }
 async function createList() {
     // getting the list of participating subs from the modcoord wiki page
@@ -108,13 +108,14 @@ let checkCounter = 0;
 
 async function updateStatus() {
     //return;
+    const cooldownBetweenRequests = 100; // time between subreddit requests in milliseconds
     let todo = 0;
     let done = 0;
-    let delay = 0;
-    const stackTrace = new Error().stack
+    let delay = 0;  // Incremented on the fly. Do not change.
+    // const stackTrace = new Error().stack
     checkCounter++;
     let doReturn = false;
-    console.log("Starting check " + checkCounter + " with stackTrace: " + stackTrace);
+    console.log("Starting check " + checkCounter);
     for (let section in subreddits) {
         for (let subreddit in subreddits[section]) {
             if (doReturn) return;
@@ -126,12 +127,13 @@ async function updateStatus() {
                 doReturn = true;
             }
             setTimeout(() => {
-
-                request.httpsGet("/" + subreddits[section][subreddit].name + ".json").then(function (data) {
+                let url = "/" + subreddits[section][subreddit].name + ".json";
+                // console.log(url)
+                request.httpsGet(url).then(function (data) {
                     try {
                         if (doReturn) return;
                         done++;
-                        //console.log("checked " + subreddits[section][subreddit].name)      
+                        console.log("checked " + subreddits[section][subreddit].name)
                         if (data.startsWith("<")) {
                             console.log("We're probably getting blocked... - " + data);
                             return;
@@ -175,10 +177,11 @@ async function updateStatus() {
                     }
                 }).catch(function (err) {
                     console.log("Request failed! We're probably getting blocked... - " + err);
+                    console.log(`${url}   |   FAILED`)
                     stop();
                 });
             }, delay);
-            delay += 1;
+            delay += cooldownBetweenRequests;
         }
     }
 }
