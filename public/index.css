@@ -639,7 +639,7 @@ footer img {
     line-height: 1;
 }
 .progress-texts h1 .odemeter, .progress-texts p .odemeter {
-    transform: translateY(-3px);
+    /* transform: translateY(-3px); */
 }
 
 .progress-bar-inner {
