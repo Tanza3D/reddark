@@ -6,6 +6,9 @@ var audioSystem = {
             audio.play();
     }
 }
+
+var block = ["r/bi_irl", "r/suddenlybi", "r/ennnnnnnnnnnnbbbbbby", "r/feemagers", "r/BrexitAteMyFace", "r/emoney"];
+
 document.getElementById("enable_sounds").addEventListener("click", function () {
     if (audioSystem.playAudio == false) {
         document.getElementById("enable_sounds").innerHTML = "Disable sound alerts"
@@ -66,12 +69,18 @@ function doScroll(el) {
     window.scrollTo(0, middle);
 }
 function updateSubreddit(data, section, _new = false) {
+    if(block.includes(data.name)) {
+        console.log("ignoring " + data.name);
+        return
+    }
+
     console.log(section);
 
     var section_basename = section.replace(" ", "").replace(":", "").replace("+", "").replace(" ", "").replace("\r", "").replace("\n", "");
     
     console.log(section_basename);
     if (!loaded) return;
+    section = section.substring(0, section.length - 1);
     var text = "<strong>" + data.name + "</strong> has gone private! (" + section + ")";
     if (data.status == "private") {
         if (_new) {
@@ -109,6 +118,9 @@ function updateSubreddit(data, section, _new = false) {
         var textel = Object.assign(document.createElement("h3"), { innerHTML: new Date().toISOString().replace("T", " ").replace(/\..+/, '') });
         history_item.appendChild(header);
         history_item.appendChild(textel);
+        if(data.status == "public") {
+            history_item.classList.add("history-item-online")
+        }
         document.getElementById("counter-history").prepend(history_item);
         document.getElementById("counter-history").scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -162,10 +174,32 @@ function fillSubredditsList(data) {
     updateStatusText();
 }
 
+
+od_percentage = new Odometer({
+    el: document.getElementById("percentage"),
+    value: 0,
+    format: '(,ddd).dd',
+    theme: 'default'
+});
+od_togo = new Odometer({
+    el: document.getElementById("togo"),
+    value: 0,
+    format: '',
+    theme: 'default'
+});
+
+
+
 function updateStatusText() {
     document.getElementById("amount").innerHTML = "<strong>" + dark + "</strong><light>/" + amount + "</light> subreddits are currently dark.";
     od.update(dark);
     document.getElementById("lc-max").innerHTML = " <light>out of</light> " + amount;
+
+
+    var percentage = ((dark / amount) * 100).toFixed(2);;
+    od_percentage.update(percentage);
+    od_togo.update(amount - dark);
+    document.getElementById("progress-bar").style = "width: " + percentage + "%";
 }
 function newStatusUpdate(text, callback = null, _classes = []) {
     var item = Object.assign(document.createElement("div"), { "className": "status-update" });
