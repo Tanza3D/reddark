@@ -7,6 +7,23 @@ const request = require("./requests.js");
 const config = require("./config.js");
 let {exec} = require('child_process');
 
+const xpath = require('xpath');
+const DOMParser = require('xmldom').DOMParser
+
+const domOptions = {
+    locator: {},
+    errorHandler: {
+        warning: function (w) {
+        },
+        error: e => {
+            console.error(e)
+        },
+        fatalError: e => {
+            console.error(e)
+        }
+    }
+}
+
 const io = new Server(server, {
     cors: {
         origin: "https://reddark.untone.uk/",
@@ -108,7 +125,7 @@ let checkCounter = 0;
 
 async function updateStatus() {
     //return;
-    const cooldownBetweenRequests = 50; // time between subreddit requests in milliseconds
+    const cooldownBetweenRequests = 100; // time between subreddit requests in milliseconds
     let todo = 0;
     let done = 0;
     let delay = 0;  // Incremented on the fly. Do not change.
@@ -128,13 +145,11 @@ async function updateStatus() {
             }
             setTimeout(() => {
                 let url = "/" + subreddits[section][subreddit].name + ".json";
-                // console.log(url)
                 request.httpsGet(url).then(function (data) {
                     try {
-
                         if (doReturn) return;
                         done++;
-                        console.log("checked " + subreddits[section][subreddit].name)
+                        // console.log("checked " + subreddits[section][subreddit].name)
                         if (data.startsWith("<")) {
                             console.log("We're probably getting blocked... - " + data);
                             return;
@@ -169,6 +184,31 @@ async function updateStatus() {
                             io.emit("updatenew", subreddits[section][subreddit]);
                         }
 
+                        // If a subreddit is public, check if it is restricted by analyzing the HTML of the page
+                        if(subreddits[section][subreddit].status === "public"){
+                            setTimeout(() => {  // Use a timeout block for page request to limit request rate
+                                let subredditElement = subreddits[section][subreddit]
+                                // Submit a request for the HTML of the page
+                                request.httpsGet(subredditElement.name).then(pageHTML => {
+
+                                    // Parse a nodal document model from the page HTML
+                                    // reddit is bad at making websites, so we have to tell the parser not to throw
+                                    // a hundred warnings
+                                    let doc = new DOMParser(domOptions).parseFromString(pageHTML)
+
+                                    // Use XPath to search for the span text that says "Restricted"
+                                    let nodes = xpath.select("//span[text()='Restricted']", doc)
+
+                                    // If said span is present, the subreddit isn't accepting submissions.
+                                    let isRestricted = nodes.length > 0;
+                                    if(isRestricted){
+                                        console.log(`[INFO] Found restricted subreddit: ${subredditElement.name}`)
+                                        subreddits[section][subreddit].status = "private";
+                                    }
+                                })
+                            }, cooldownBetweenRequests)
+                        }
+
                         // uh i'm not sure lol
                         if (done > (todo - 2) && !firstCheck) {
                             io.emit("subreddits", subreddits);
@@ -199,7 +239,3 @@ async function updateStatus() {
     await createList();
     await updateStatus();
 })();
-
-function checkIfRestricted(subreddit){
-
-}
