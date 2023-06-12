@@ -459,6 +459,7 @@ footer img {
     position: fixed;
     top: 50px;
     left: 50px;
+    cursor: pointer;
 }
 
 .odometer.odometer-auto-theme,
