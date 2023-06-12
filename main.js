@@ -134,11 +134,11 @@ async function updateStatus() {
                         done++;
                         //console.log("checked " + subreddits[section][subreddit].name)      
                         if (data.startsWith("<")) {
-                            console.log("We're probably getting blocked... - " + data);
+                            console.log("We're probably getting blocked..." + config.logDataOnFail ? " - " + data : "");
                             return;
                         }
                         if (!isJson(data)) {
-                            console.log("Response is not JSON? We're probably getting blocked... - " + data);
+                            console.log("Response is not JSON? We're probably getting blocked..." + config.logDataOnFail ? " - " + data : "");
                             return;
                         }
                         var resp = JSON.parse(data);
