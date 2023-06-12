@@ -6,10 +6,6 @@ const { Server } = require("socket.io");
 const request = require("./requests.js");
 const config = require("./config.js");
 let {exec} = require('child_process');
-//const { EmbedBuilder, WebhookClient } = require('discord.js');
-
-// https://canary.discord.com/api/webhooks/1117526092723535892/GsxAHs03IiSq72EnKFrT1aQJkg7V5AWNK_lUPyZLomawKEamctD9A8ILGc7p6S275fnP
-//const webhookClient = new WebhookClient({ id: 1117526092723535892, token: "GsxAHs03IiSq72EnKFrT1aQJkg7V5AWNK_lUPyZLomawKEamctD9A8ILGc7p6S275fnP" });
 
 const io = new Server(server, {
     cors: {
@@ -20,8 +16,6 @@ const io = new Server(server, {
     },
     allowEIO3: true
 });
-
-var block = ["r/bi_irl", "r/suddenlybi", "r/ennnnnnnnnnnnbbbbbby", "r/feemagers", "r/BrexitAteMyFace"];
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
@@ -42,14 +36,13 @@ function isJson(item) {
 const subreddits_src = {
 
 }
-const subreddits = {};
+let subreddits = {};
 async function appendList(url) {
     let section = [];
     let sectionName = "";
     let data = await request.httpsGet(url);
     data = JSON.parse(data);
     let text = data['data']['content_md'];
-    //console.log(text);
     let lines = text.split("\n");
     for (let line of lines) {
         if (line.startsWith("##") && !line.includes("Please") && line.includes(":")) {
@@ -122,10 +115,10 @@ async function updateStatus() {
     let todo = 0;
     let done = 0;
     let delay = 0;  // Incremented on the fly. Do not change.
-    // const stackTrace = new Error().stack
+    const stackTrace = new Error().stack
     checkCounter++;
     let doReturn = false;
-    console.log("(THIS IS NOT AN ERROR) Starting check " + checkCounter);
+    console.log("(THIS IS NOT AN ERROR) Starting check " + checkCounter + " with stackTrace: " + stackTrace);
     for (let section in subreddits) {
         for (let subreddit in subreddits[section]) {
 
