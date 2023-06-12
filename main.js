@@ -6,6 +6,10 @@ const { Server } = require("socket.io");
 var request = require("./requests.js");
 var config = require("./config.js")
 var { exec } = require('child_process');
+//const { EmbedBuilder, WebhookClient } = require('discord.js');
+
+// https://canary.discord.com/api/webhooks/1117526092723535892/GsxAHs03IiSq72EnKFrT1aQJkg7V5AWNK_lUPyZLomawKEamctD9A8ILGc7p6S275fnP
+//const webhookClient = new WebhookClient({ id: 1117526092723535892, token: "GsxAHs03IiSq72EnKFrT1aQJkg7V5AWNK_lUPyZLomawKEamctD9A8ILGc7p6S275fnP" });
 
 const io = new Server(server, {
     cors: {
@@ -16,6 +20,8 @@ const io = new Server(server, {
     },
     allowEIO3: true
 });
+
+var block = ["r/bi_irl", "r/suddenlybi", "r/ennnnnnnnnnnnbbbbbby", "r/feemagers", "r/BrexitAteMyFace"];
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
@@ -67,6 +73,10 @@ async function createList() {
         console.log(section);
         subreddits[section] = [];
         for (var subreddit in subreddits_src[section]) {
+            if(block.includes(subreddit)) {
+                console.log("ignoring " + subreddit);
+                continue;
+            }
             subreddits[section].push({
                 "name": subreddits_src[section][subreddit].replace("\n", "").replace("\r", ""),
                 "status": "public"
@@ -151,13 +161,22 @@ async function updateStatus() {
                             subreddits[section][subreddit].status = "private";
                             if (firstCheck == false)
                                 io.emit("update", subreddits[section][subreddit]);
-                            else
+                            else {
+                               //webhookClient.send({
+                               //    content: subreddits[section][subreddit].name + " has gone private! (" + section + ")",
+                               //    username: 'Reddark Update'
+                               //});
                                 io.emit("updatenew", subreddits[section][subreddit]);
+                            }
 
                         } else if (subreddits[section][subreddit].status == "private" && typeof (resp['reason']) == "undefined") {
                             console.log("updating to public with data:")
                             console.log(resp);
                             subreddits[section][subreddit].status = "public";
+                           //webhookClient.send({
+                           //    content: subreddits[section][subreddit].name + " has gone public. (" + section + ")",
+                           //    username: 'Reddark Update'
+                           //});
                             io.emit("updatenew", subreddits[section][subreddit]);
                         }
 
@@ -169,6 +188,7 @@ async function updateStatus() {
                             setTimeout(() => {
                                 updateStatus();
                             }, 10000);
+                            io.emit("subreddits", subreddits);
                             console.log("FINISHED CHECK (or close enough to) - num " + checkCounter);
                             return;
                         }
@@ -183,7 +203,7 @@ async function updateStatus() {
                     return;
                 });
             }, delay);
-            delay += 1;
+            delay += 0;
         }
     }
 }
