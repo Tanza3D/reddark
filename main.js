@@ -6,6 +6,10 @@ const { Server } = require("socket.io");
 const request = require("./requests.js");
 const config = require("./config.js");
 let {exec} = require('child_process');
+//const { EmbedBuilder, WebhookClient } = require('discord.js');
+
+// https://canary.discord.com/api/webhooks/1117526092723535892/GsxAHs03IiSq72EnKFrT1aQJkg7V5AWNK_lUPyZLomawKEamctD9A8ILGc7p6S275fnP
+//const webhookClient = new WebhookClient({ id: 1117526092723535892, token: "GsxAHs03IiSq72EnKFrT1aQJkg7V5AWNK_lUPyZLomawKEamctD9A8ILGc7p6S275fnP" });
 
 const io = new Server(server, {
     cors: {
@@ -16,6 +20,8 @@ const io = new Server(server, {
     },
     allowEIO3: true
 });
+
+var block = ["r/bi_irl", "r/suddenlybi", "r/ennnnnnnnnnnnbbbbbby", "r/feemagers", "r/BrexitAteMyFace"];
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
@@ -119,7 +125,7 @@ async function updateStatus() {
     // const stackTrace = new Error().stack
     checkCounter++;
     let doReturn = false;
-    console.log("Starting check " + checkCounter);
+    console.log("(THIS IS NOT AN ERROR) Starting check " + checkCounter);
     for (let section in subreddits) {
         for (let subreddit in subreddits[section]) {
 
@@ -143,7 +149,7 @@ async function updateStatus() {
                             return;
                         }
                         if (!isJson(data)) {
-                            console.log("Response is not JSON? We're probably getting blocked... - " + data);
+                            console.log("Response is not JSON? We're probably getting blocked..." + config.logDataOnFail ? " - " + data : "");
                             return;
                         }
 
@@ -166,16 +172,24 @@ async function updateStatus() {
                             subreddits[section][subreddit].status = "private";
                             if (!firstCheck)
                                 io.emit("update", subreddits[section][subreddit]);
-                            else
+                            else {
+                               //webhookClient.send({
+                               //    content: subreddits[section][subreddit].name + " has gone private! (" + section + ")",
+                               //    username: 'Reddark Update'
+                               //});
                                 io.emit("updatenew", subreddits[section][subreddit]);
                             console.log(`PRIVATE: ${subreddits[section][subreddit].name}`)
                             // console.log(resp);
+                            }
 
                         // if subreddit status was private and is now public
                         } else if (!effectivelyPrivate && subredditPreviouslyPrivate) {
                             console.log(`PUBLIC: ${subreddits[section][subreddit].name}`)
-                            // console.log(resp);
                             subreddits[section][subreddit].status = "public";
+                           //webhookClient.send({
+                           //    content: subreddits[section][subreddit].name + " has gone public. (" + section + ")",
+                           //    username: 'Reddark Update'
+                           //});
                             io.emit("updatenew", subreddits[section][subreddit]);
                         }
 
