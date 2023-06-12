@@ -177,7 +177,8 @@ od_togo = new Odometer({
 
 
 function updateStatusText() {
-    document.getElementById("amount").innerHTML = "<strong>" + dark + "</strong><light>/" + amount + "</light> subreddits are currently dark.";
+    var percent = dark/amount * 100;
+    document.getElementById("amount").innerHTML = "<strong>" + dark + "</strong><light>/" + amount + "</light><strong> (" + percent.toFixed(1) + "%)</strong> subreddits are currently dark.";
     od.update(dark);
     document.getElementById("lc-max").innerHTML = " <light>out of</light> " + amount;
 
