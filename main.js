@@ -204,6 +204,8 @@ async function updateStatus() {
                                     if(isRestricted){
                                         console.log(`[INFO] Found restricted subreddit: ${subredditElement.name}`)
                                         subreddits[section][subreddit].status = "private";
+                                    } else{
+                                        subreddits[section][subreddit].status = "public";
                                     }
                                 })
                             }, cooldownBetweenRequests)
