@@ -155,7 +155,7 @@ async function updateStatus() {
                                 io.emit("updatenew", subreddits[section][subreddit]);
                         
                         // if restricted
-                        }else if(resp.data && resp.data.children[0].data.subreddit_type == "restricted" && subreddits[section][subreddit].status != "restricted"){
+                        }else if(resp && resp.data && resp.data.children[0] && resp.data.children[0].data.subreddit_type == "restricted" && subreddits[section][subreddit].status != "restricted"){
 
                             subreddits[section][subreddit].status = "restricted";
                             if (firstCheck == false){
@@ -164,7 +164,10 @@ async function updateStatus() {
                                 io.emit("updatenew", subreddits[section][subreddit]);
                             }
                         
-                        } else if (subreddits[section][subreddit].status == "private" && typeof (resp['reason']) == "undefined") {
+                        } else if ((subreddits[section][subreddit].status == "private" && typeof (resp['reason']) == "undefined")
+                                || (subreddits[section][subreddit].status == "restricted" && data['data'] && data['data']['children'][0]['data']['subreddit_type'] == "public")
+                            ){
+
                             console.log("updating to public with data:")
                             console.log(resp);
                             subreddits[section][subreddit].status = "public";
