@@ -9,7 +9,7 @@ let {exec} = require('child_process');
 
 const io = new Server(server, {
     cors: {
-        origin: "https://reddark.untone.uk/",
+        origin: config.url,
         methods: ["GET", "POST"],
         transports: ['websocket'],
         credentials: true
@@ -67,6 +67,10 @@ async function createList() {
         console.log(section);
         subreddits[section] = [];
         for (let subreddit in subreddits_src[section]) {
+            if(config.blockedSubreddits.includes(subreddit)) {
+                console.log("ignoring " + subreddit);
+                continue;
+            }
             subreddits[section].push({
                 "name": subreddits_src[section][subreddit].replace("\n", "").replace("\r", ""),
                 "status": "public"
@@ -135,7 +139,7 @@ async function updateStatus() {
                         done++;
                         // console.log("checked " + subreddits[section][subreddit].name)
                         if (data.startsWith("<")) {
-                            console.log("We're probably getting blocked... - " + data);
+                            console.log("We're probably getting blocked..." + config.logDataOnFail ? " - " + data : "");
                             return;
                         }
                         if (!isJson(data)) {
@@ -185,6 +189,7 @@ async function updateStatus() {
                             setTimeout(() => {
                                 updateStatus();
                             }, 10000);
+                            io.emit("subreddits", subreddits);
                             console.log("FINISHED CHECK (or close enough to) - num " + checkCounter);
                         }
                     } catch {
