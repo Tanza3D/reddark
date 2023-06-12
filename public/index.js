@@ -192,3 +192,17 @@ od = new Odometer({
     theme: 'default'
 });
 
+
+window.addEventListener('load', function() {
+    // see if we got passed any options
+    if (typeof this.window.location.hash === 'string') {
+        const hashWords = this.window.location.hash.replace(/^#/, '').split('&');
+        console.log('hash:', hashWords);
+        // automatically show large counter?
+        if (hashWords.indexOf('largeCounter') >= 0) {
+            toggleLargeCounter();
+        }
+    } else {
+        console.log('no hash');
+    }
+})
