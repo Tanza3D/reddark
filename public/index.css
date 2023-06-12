@@ -440,11 +440,12 @@ footer img {
 }
 
 .large-counter h1 {
-    font-size: 9vh;
+    font-size: 9vh
 }
 
 .large-counter h1 small {
     font-size: 3vh;
+    color: inherit;
 }
 
 .large-counter-close {
@@ -615,4 +616,43 @@ footer img {
 .history-item * {
     padding: 0px;
     margin: 0px;
+}
+
+.history-item-online {
+    display: none;
+    opacity: 0.4;
+    transform: scale(0.9);
+    filter: grayscale(0.8)
+}
+
+
+.progress-texts {
+    
+    display: flex;
+    align-items: flex-start;
+}
+.progress-texts h1, .progress-texts p {
+    margin: 0px;
+    font-size: 20px !important;
+    margin-top: 12px;
+    padding: 0px;
+    line-height: 1;
+}
+.progress-texts h1 .odemeter, .progress-texts p .odemeter {
+    transform: translateY(-3px);
+}
+
+.progress-bar-inner {
+    height: 3px;
+    background-color: white;
+}
+
+.progress-texts p {
+    margin-left: auto;
+}
+
+.progress-bar {
+    margin-top: -8px;
+    height: 3px;
+    background-color: #fff2;
 }
