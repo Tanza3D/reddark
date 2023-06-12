@@ -1,3 +1,4 @@
 module.exports = {
-    port: 3212
+    port: 3212,
+    url: "https://reddark.untone.uk/"
 }
