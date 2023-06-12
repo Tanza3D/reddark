@@ -22,6 +22,7 @@ var socket = io();
 var subreddits = {};
 var amount = 0;
 var dark = 0;
+var statusUpdateItems = [];
 
 var loaded = false;
 socket.on("subreddits", (data) => {
@@ -153,13 +154,24 @@ function updateStatusText() {
     od.update(dark);
     document.getElementById("lc-max").innerHTML = " <light>out of</light> " + amount;
 }
+
 function newStatusUpdate(text, callback = null, _classes = []) {
     var item = Object.assign(document.createElement("div"), { "className": "status-update" });
     item.innerHTML = text;
+
+    if (statusUpdateItems.length >= 3) {
+        const itemToRemove = x.pop();
+        if (document.contains(itemToRemove)) {
+            itemToRemove.remove();
+        }
+    }
+
+    statusUpdateItems.unshift(item);
+
     document.getElementById("statusupdates").appendChild(item);
     setTimeout(() => {
         item.remove();
-    }, 20000);
+    }, 10000);
 
     item.addEventListener("click", function () {
         item.remove();
