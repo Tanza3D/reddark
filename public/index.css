@@ -166,7 +166,7 @@ a {
     color: #00ffaa !important;
     text-shadow: 0px 0px 20px #00ffaa !important;
     margin-bottom: 15px;
-    font-weight: 900;
+    font-weight: 700;
     position: relative;
 }
 
@@ -293,7 +293,7 @@ a {
 }
 
 strong {
-    font-weight: 900;
+    font-weight: 700;
 }
 
 light {
