@@ -123,9 +123,14 @@ function genItem(name, status) {
     _status.innerHTML = status;
     _title.href = "https://old.reddit.com/" + name;
     _item.id = name;
-    if (status != "public") {
+    if (status == "private") {
         _item.classList.add("subreddit-private");
+    
+    }else if(status == "restricted"){
+        _item.classList.add("subreddit-restricted")
     }
+
+
     _item.appendChild(_title);
     _item.appendChild(_status);
     return _item;
