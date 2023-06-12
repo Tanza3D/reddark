@@ -167,7 +167,8 @@ async function updateStatus() {
                                //    username: 'Reddark Update'
                                //});
                                 io.emit("updatenew", subreddits[section][subreddit]);
-                        
+                            }
+
                         // if restricted
                         }else if(resp && resp.data && resp.data.children[0] && resp.data.children[0].data.subreddit_type == "restricted" && subreddits[section][subreddit].status != "restricted"){
 
