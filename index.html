@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="index.css?v=111121412131">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,15 +5,17 @@
     <title>Reddark</title>
     <meta name="google-site-verification" content="U_FcRrVYPOtB9T7cs7klW5ioWQhkLbKyWH3H8AGK_es" />
     <meta name="description" content="An open source website to watch subreddits going dark">
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 115 115%22><text y=%22.9em%22 font-size=%2290%22>✊</text></svg>">
+    <link rel="stylesheet" href="index.css?v=111121412132">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 115 115%22><text y=%22.9em%22 font-size=%2290%22>✊</text></svg>">
 </head>
-
 <body>
     <div class="large-counter large-counter-hidden" id="large-counter">
-        <div class="large-counter-close" onclick="toggleLargeCounter()">X</div>
+        <button class="large-counter-close" aria-label="Close">X</button>
         <div class="large-counter-inner">
-            <h1><span class="odemeter" id="lc-count">52</span><small id="lc-max">/amount</small></h1>
+            <div class="odometer-container">
+                <span class="odemeter" id="lc-count">52</span>
+                <small id="lc-max">/amount</small>
+            </div>
             <div class="progress">
                 <div class="progress-bar">
                     <div class="progress-bar-inner" id="progress-bar">
@@ -23,8 +23,11 @@
                     </div>
                 </div>
                 <div class="progress-texts">
-                    <h1><span id="percentage" class="odemeter"></span>%</h1>
-                    <p><strong class="odemeter" id="togo">test</strong> to go</p>
+                    <div class="percentage-container">
+                        <span id="percentage" class="odemeter"></span>%
+                    </div>
+                    <p>
+                        <strong class="odemeter" id="togo">test</strong> to go</p>
                 </div>
             </div>
         </div>
@@ -55,13 +58,17 @@
     </header>
     <div class="tools">
         <div class="tools-inner">
-            <div class="toggle" onclick="hidePublicSubreddits()" id="hide-public">
+            <!--
+            @todo: replace this with an checkbox input with a label for better a11y.
+            Styles can be changed to look like an actual toggle component as well.
+            -->
+            <div class="toggle" id="toggle-public">
                 <div class="toggle-box"></div>
                 <p>Hide public subreddits</p>
             </div>
             <div class="tools-left">
-                <div class="button" onclick="toggleLargeCounter()">Large counter</div>
-                <div class="button" id="enable_sounds">Enable sound alerts</div>
+                <button class="button" id="toggle_large_counter">Large counter</button>
+                <button class="button" id="enable_sounds">Enable sound alerts</button>
             </div>
         </div>
     </div>
