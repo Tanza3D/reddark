@@ -1,3 +1,5 @@
+# This is the old repository! Please check out the new one [here](https://github.com/reddark-remix/reddark-remix).
+
 # [Reddark](https://reddark.untone.uk/)
 A website to watch subreddits go dark in realtime.
 
