@@ -125,6 +125,8 @@ function genItem(name, status) {
     _title.innerHTML = name;
     _status.innerHTML = status;
     _title.href = "https://old.reddit.com/" + name;
+    _title.target = "_blank";
+    _title.rel = "noopener noreferrer";
     _item.id = name;
     if (status != "public") {
         _item.classList.add("subreddit-private");
