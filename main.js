@@ -9,13 +9,15 @@ var { exec } = require('child_process');
 
 const io = new Server(server, {
     cors: {
-        origin: "https://reddark.untone.uk/",
+        origin: config.url,
         methods: ["GET", "POST"],
         transports: ['websocket'],
         credentials: true
     },
     allowEIO3: true
 });
+
+var block = ["r/bi_irl", "r/suddenlybi", "r/ennnnnnnnnnnnbbbbbby", "r/feemagers", "r/BrexitAteMyFace"];
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
@@ -67,6 +69,10 @@ async function createList() {
         console.log(section);
         subreddits[section] = [];
         for (var subreddit in subreddits_src[section]) {
+            if(block.includes(subreddit)) {
+                console.log("ignoring " + subreddit);
+                continue;
+            }
             subreddits[section].push({
                 "name": subreddits_src[section][subreddit].replace("\n", "").replace("\r", ""),
                 "status": "public"
@@ -115,7 +121,7 @@ async function updateStatus() {
     const stackTrace = new Error().stack
     checkCounter++;
     var doReturn = false;
-    console.log("Starting check " + checkCounter + " with stackTrace: " + stackTrace);
+    console.log("Starting check " + checkCounter + " with stackTrace: " + stackTrace.replace("Error", ""));
     for (let section in subreddits) {
         for (let subreddit in subreddits[section]) {
             if (doReturn) return;
@@ -134,11 +140,11 @@ async function updateStatus() {
                         done++;
                         //console.log("checked " + subreddits[section][subreddit].name)      
                         if (data.startsWith("<")) {
-                            console.log("We're probably getting blocked... - " + data);
+                            console.log("We're probably getting blocked..." + config.logDataOnFail ? " - " + data : "");
                             return;
                         }
                         if (!isJson(data)) {
-                            console.log("Response is not JSON? We're probably getting blocked... - " + data);
+                            console.log("Response is not JSON? We're probably getting blocked..." + config.logDataOnFail ? " - " + data : "");
                             return;
                         }
                         var resp = JSON.parse(data);
@@ -151,13 +157,18 @@ async function updateStatus() {
                             subreddits[section][subreddit].status = "private";
                             if (firstCheck == false)
                                 io.emit("update", subreddits[section][subreddit]);
-                            else
+                            else {
                                 io.emit("updatenew", subreddits[section][subreddit]);
+                            }
 
                         } else if (subreddits[section][subreddit].status == "private" && typeof (resp['reason']) == "undefined") {
                             console.log("updating to public with data:")
                             console.log(resp);
                             subreddits[section][subreddit].status = "public";
+                           //webhookClient.send({
+                           //    content: subreddits[section][subreddit].name + " has gone public. (" + section + ")",
+                           //    username: 'Reddark Update'
+                           //});
                             io.emit("updatenew", subreddits[section][subreddit]);
                         }
 
@@ -169,6 +180,7 @@ async function updateStatus() {
                             setTimeout(() => {
                                 updateStatus();
                             }, 10000);
+                            io.emit("subreddits", subreddits);
                             console.log("FINISHED CHECK (or close enough to) - num " + checkCounter);
                             return;
                         }
@@ -183,7 +195,7 @@ async function updateStatus() {
                     return;
                 });
             }, delay);
-            delay += 1;
+            delay += 0;
         }
     }
 }
