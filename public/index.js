@@ -91,6 +91,9 @@ function updateSubreddit(data, section, _new = false) {
         }
         document.getElementById(data.name).classList.add("subreddit-private");
 
+        // remove if previously restricted
+        document.getElementById(data.name).classList.remove("subreddit-restricted");
+
     }else if (data.status == "restricted") {
         if (_new) {
             newStatusUpdate("<strong>" + data.name + "</strong> has gone restricted!", function () {
@@ -99,6 +102,9 @@ function updateSubreddit(data, section, _new = false) {
             audioSystem.play("privated")
         }
         document.getElementById(data.name).classList.add("subreddit-restricted");
+
+        // remove if previously private
+        document.getElementById(data.name).classList.remove("subreddit-private");
     } else {
         if (_new) {
             var text = "<strong>" + data.name + "</strong> has gone public. (" + section + ")";
@@ -107,7 +113,9 @@ function updateSubreddit(data, section, _new = false) {
             })
             audioSystem.play("public")
         }
-        document.getElementById(data.name).classList.remove("subreddit-private");
+
+        // remove if neither
+        document.getElementById(data.name).classList.remove("subreddit-private", "subreddit-restricted");
     }
     updateStatusText();
     document.getElementById(data.name).querySelector("p").innerHTML = data.status;
