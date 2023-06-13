@@ -161,7 +161,20 @@ async function updateStatus() {
                                 io.emit("updatenew", subreddits[section][subreddit]);
                             }
 
-                        } else if (subreddits[section][subreddit].status == "private" && typeof (resp['reason']) == "undefined") {
+                        // if restricted
+                        }else if(resp && resp.data && resp.data.children[0] && resp.data.children[0].data.subreddit_type == "restricted" && subreddits[section][subreddit].status != "restricted"){
+
+                            subreddits[section][subreddit].status = "restricted";
+                            if (firstCheck == false){
+                                io.emit("update", subreddits[section][subreddit]);
+                            }else{
+                                io.emit("updatenew", subreddits[section][subreddit]);
+                            }
+                        
+                        } else if ((subreddits[section][subreddit].status == "private" && typeof (resp['reason']) == "undefined")
+                                || (subreddits[section][subreddit].status == "restricted" && data['data'] && data['data']['children'][0]['data']['subreddit_type'] == "public")
+                            ){
+
                             console.log("updating to public with data:")
                             console.log(resp);
                             subreddits[section][subreddit].status = "public";
@@ -174,9 +187,9 @@ async function updateStatus() {
 
                         if (done > (todo - 2) && firstCheck == false) {
                             io.emit("subreddits", subreddits);
-                            firstCheck = true;
                         }
                         if (done == todo) {
+                            firstCheck = true;
                             setTimeout(() => {
                                 updateStatus();
                             }, 10000);
