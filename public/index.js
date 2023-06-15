@@ -64,7 +64,7 @@ socket.on("updatenew", (data) => {
 })
 function doScroll(el) {
     const elementRect = el.getBoundingClientRect();
-    const absoluteElementTop = elementRect.top + window.pageYOffset;
+    const absoluteElementTop = elementRect.top + window.scrollY;
     const middle = absoluteElementTop - (window.innerHeight / 2);
     window.scrollTo(0, middle);
 }
@@ -125,6 +125,7 @@ function genItem(name, status) {
     _title.innerHTML = name;
     _status.innerHTML = status;
     _title.href = "https://old.reddit.com/" + name;
+    _title.target = "_blank"; 
     _item.id = name;
     if (status != "public") {
         _item.classList.add("subreddit-private");
